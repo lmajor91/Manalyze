@@ -76,6 +76,22 @@ else()
     message("Not building hash library")
 endif()
 
+# including header files and other source
+include_directories(
+    ${PROJECT_SOURCE_DIR}
+    ${PROJECT_SOURCE_DIR}/include
+    ${PROJECT_SOURCE_DIR}/plugins
+    ${Boost_INCLUDE_DIRS}
+)
+
+# optional includes
+if(USE_YARA)
+    include_directories(${PROJECT_SOURCE_DIR}/external/yara/include)
+endif()
+if(USE_YARA OR USE_HASHLIB)
+    include_directories(${PROJECT_SOURCE_DIR}/external)
+endif()
+
 add_definitions(-DWITH_MANACOMMONS) # Use functions from manacommons.
 add_library(manape SHARED manape/pe.cpp manape/nt_values.cpp manape/utils.cpp manape/imports.cpp manape/resources.cpp manape/section.cpp manape/imported_library.cpp manape/ordinals.cpp)
 
@@ -109,7 +125,7 @@ else()
     string(REGEX MATCH "BSD" IS_BSD ${CMAKE_SYSTEM_NAME}) # Detect if we are compiling on a BSD system.
 
     if(CMAKE_BUILD_TYPE MATCHES "[Dd][Ee][Bb][Uu][Gg]")
-        add_definitions("/D_DEBUG")
+        add_definitions("-D_DEBUG")
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -fno-omit-frame-pointer")
         if(TESTS) # Add coverage option if unit TESTS were requested.
             set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage")
@@ -126,7 +142,7 @@ else()
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-rpath='$ORIGIN'")
 
     # Compile the *nix authenticode plugin if OpenSSL was found.
-    # this also required Yara
+    # this also requires Yara and Hashlib
     if(USE_OPENSSL AND USE_YARA AND USE_HASHLIB)
         add_library(plugin_authenticode SHARED plugins/plugin_authenticode/plugin_authenticode_openssl.cpp
             plugins/plugin_authenticode/commons.cpp
