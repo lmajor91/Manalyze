@@ -5,9 +5,6 @@ project(manalyze)
 
 # options for building
 option(TESTS "Generate unit tests" OFF)
-option(USE_YARA "Include Yara functionality into the program (confirm what this does)" ON)
-option(USE_HASHLIB "Include a hash library into the program (confirm what this does)" ON)
-option(USE_OPENSSL "Adds support for OpenSSL integration into the program" ON)
 
 # setting output directories
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
@@ -29,7 +26,7 @@ if(APPLE)
     set(CMAKE_MACOSX_RPATH 1)
 endif()
 
-# pulling boost
+# pulling in boost
 if(TESTS)
     message("Building unit tests for the program")
     find_package(Boost REQUIRED COMPONENTS regex system filesystem program_options unit_test_framework)
@@ -38,43 +35,8 @@ else()
     find_package(Boost REQUIRED COMPONENTS regex system filesystem program_options)
 endif()
 
-# optionally compiling with OpenSSL
-if(USE_OPENSSL)
-    # get the package
-    find_package(OpenSSL REQUIRED)
-    add_definitions(-DWITH_OPENSSL)
-    include_directories(${OPENSSL_INCLUDE_DIR})
-else()
-    message("Building without OpenSSL.")
-endif()
-
-# download/update Yara
-if(USE_YARA)
-    if(EXISTS external/yara)
-        message("Updating yara...")
-        execute_process(COMMAND ${GIT_EXECUTABLE} --git-dir=external/yara/.git fetch)
-        execute_process(COMMAND ${GIT_EXECUTABLE} --git-dir=external/yara/.git --work-tree=external/yara merge origin/master)
-    else()
-        message("Checking out yara...")
-        execute_process(COMMAND ${GIT_EXECUTABLE} clone https://github.com/JusticeRage/yara.git external/yara)
-    endif()
-else()
-    message("Not building yara")
-endif()
-
-# download/update hashlib
-if(USE_HASHLIB)
-    if(EXISTS external/yara)
-        message("Updating hash-library...")
-        execute_process(COMMAND ${GIT_EXECUTABLE} --git-dir=external/hash-library/.git fetch)
-        execute_process(COMMAND ${GIT_EXECUTABLE} --git-dir=external/hash-library/.git --work-tree=external/hash-library merge origin/master)
-    else()
-        message("Checking out hash-library...")
-        execute_process(COMMAND ${GIT_EXECUTABLE} clone https://github.com/JusticeRage/hash-library.git external/hash-library)
-    endif()
-else()
-    message("Not building hash library")
-endif()
+# pulling in OpenSSL
+find_package(OpenSSL REQUIRED)
 
 # including header files and other source
 include_directories(
@@ -84,17 +46,13 @@ include_directories(
     ${Boost_INCLUDE_DIRS}
 )
 
-# optional includes
-if(USE_YARA)
-    include_directories(${PROJECT_SOURCE_DIR}/external/yara/include)
-endif()
-if(USE_YARA OR USE_HASHLIB)
-    include_directories(${PROJECT_SOURCE_DIR}/external)
-endif()
+# compilation flags
+add_definitions("-DWITH_MANACOMMONS") # Use functions from manacommons.
 
-add_definitions(-DWITH_MANACOMMONS) # Use functions from manacommons.
+# Sources for manape
 add_library(manape SHARED manape/pe.cpp manape/nt_values.cpp manape/utils.cpp manape/imports.cpp manape/resources.cpp manape/section.cpp manape/imported_library.cpp manape/ordinals.cpp)
 
+# Sources for manacommons
 add_library(manacommons SHARED manacommons/color.cpp manacommons/output_tree_node.cpp manacommons/escape.cpp manacommons/base64.cpp manacommons/plugin_framework/result.cpp)
 
 # the main executable
@@ -102,6 +60,7 @@ add_executable(manalyze src/main.cpp src/config_parser.cpp src/output_formatter.
     src/plugin_framework/dynamic_library.cpp src/plugin_framework/plugin_manager.cpp # Plugin system
     plugins/plugins_yara.cpp plugins/plugin_packer_detection.cpp plugins/plugin_imports.cpp plugins/plugin_resources.cpp plugins/plugin_mitigation.cpp plugins/plugin_overlay.cpp) # Bundled plugins
 
+# Windows specific build options
 if(WIN32)
     add_definitions(/D_CRT_SECURE_NO_WARNINGS) # Please don't complain about fopen()
     add_definitions(/D_WINSOCK_DEPRECATED_NO_WARNINGS) # Don't complain about ASIO's WSASocket functions either.
@@ -117,53 +76,55 @@ if(WIN32)
 
     add_definitions(-DBOOST_ALL_NO_LIB -DNOMINMAX) # Problems with autolink and MSVC + don't hide std::min and std::max.
 
-    # Windows only plugins:
+    # Windows only plugins (doesn't this require Yara?)
     add_library(plugin_authenticode SHARED plugins/plugin_authenticode/plugin_authenticode.cpp
         plugins/plugin_authenticode/commons.cpp)
     target_link_libraries(plugin_authenticode manape manacommons ${Boost_LIBRARIES})
+
+# linux specific build options
 else()
     string(REGEX MATCH "BSD" IS_BSD ${CMAKE_SYSTEM_NAME}) # Detect if we are compiling on a BSD system.
 
     if(CMAKE_BUILD_TYPE MATCHES "[Dd][Ee][Bb][Uu][Gg]")
         add_definitions("-D_DEBUG")
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -fno-omit-frame-pointer")
-        if(TESTS) # Add coverage option if unit TESTS were requested.
-            set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage")
-            set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} --coverage")
-        endif()
+    endif()
+
+    # Add coverage option if unit TESTS were requested.
+    if(TESTS)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage")
+        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} --coverage")
     endif()
 
     if(NOT IS_BSD) # No need to link against dl on BSD.
         target_link_libraries(manalyze dl)
     endif()
 
-    # setting compilation flags
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-rpath='$ORIGIN'")
-
-    # Compile the *nix authenticode plugin if OpenSSL was found.
-    # this also requires Yara and Hashlib
-    if(USE_OPENSSL AND USE_YARA AND USE_HASHLIB)
-        add_library(plugin_authenticode SHARED plugins/plugin_authenticode/plugin_authenticode_openssl.cpp
-            plugins/plugin_authenticode/commons.cpp
-            plugins/plugin_authenticode/asn1.cpp
-            plugins/plugin_authenticode/pe_authenticode_digest.cpp)
-        target_link_libraries(plugin_authenticode manacommons manape hash-library yara ${OPENSSL_LIBRARIES})
+    # more compilation flags
+    if(NOT TESTS)
+        # add optimization flags
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2")
+        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O2")
     endif()
+
+    # setting compilation flags
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --std=c++17")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-rpath='$ORIGIN'")
 endif()
+
+# authenticode plugin
+add_library(plugin_authenticode SHARED
+    plugins/plugin_authenticode/plugin_authenticode_openssl.cpp
+    plugins/plugin_authenticode/commons.cpp
+    plugins/plugin_authenticode/asn1.cpp
+    plugins/plugin_authenticode/pe_authenticode_digest.cpp)
+target_link_libraries(plugin_authenticode manacommons manape yara)
 
 # plugin for VirusTotal, requires hashlib and yara
-if(USE_YARA AND USE_HASHLIB)
-    add_library(plugin_virustotal SHARED plugins/plugin_virustotal/plugin_virustotal.cpp
-        plugins/plugin_virustotal/json_spirit/json_spirit_reader.cpp
-        plugins/plugin_virustotal/json_spirit/json_spirit_value.cpp)
-    target_link_libraries(plugin_virustotal manape manacommons hash-library yara ${Boost_LIBRARIES})
-
-    # optional linking
-    if(USE_OPENSSL)
-        target_link_libraries(plugin_virustotal ${OPENSSL_LIBRARIES})
-    endif()
-endif()
+add_library(plugin_virustotal SHARED plugins/plugin_virustotal/plugin_virustotal.cpp
+    plugins/plugin_virustotal/json_spirit/json_spirit_reader.cpp
+    plugins/plugin_virustotal/json_spirit/json_spirit_value.cpp)
+target_link_libraries(plugin_virustotal manape manacommons yara ${Boost_LIBRARIES})
 
 # link libraries
 target_link_libraries(manape manacommons ${Boost_LIBRARIES})
@@ -171,15 +132,20 @@ target_link_libraries(
     manalyze
     manacommons
     manape
+    yara
     ${Boost_LIBRARIES}
 )
 
-# optionally linking libraries
-if(USE_YARA)
-    target_link_libraries(manalyze yara)
-endif()
-if(USE_HASHLIB)
-    target_link_libraries(manalyze hash-library)
+# only linking in OpenSSL if this is Linux
+if("${CMAKE_SYSTEM}" MATCHES "Linux")
+    target_link_libraries(
+        manalyze
+        ${OpenSSL_LIBRARIES}
+    )
+    target_link_libraries(
+        plugin_authenticode
+        ${OpenSSL_LIBRARIES}
+    )
 endif()
 
 # make install command for linux machines:
@@ -190,11 +156,9 @@ if("${CMAKE_SYSTEM}" MATCHES "Linux")
         LIBRARY DESTINATION /usr/local/lib
         ARCHIVE DESTINATION /usr/local/lib/static)
 
-    if(USE_YARA)
-        # Copy the yara_rules folder to /etc/manalyze.
-        install(DIRECTORY bin/yara_rules
-            DESTINATION /etc/manalyze)
-    endif()
+    # Copy the yara_rules folder to /etc/manalyze.
+    install(DIRECTORY bin/yara_rules
+        DESTINATION /etc/manalyze)
 
     # Copy the plugins to /etc/manalyze.
     install(DIRECTORY bin/
