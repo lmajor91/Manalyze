@@ -17,20 +17,20 @@
 
 #pragma once
 
+#include <iostream>
+#include <math.h>
+#include <sstream>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string>
-#include <sstream>
-#include <iostream>
 #include <string.h>
-#include <math.h>
+#include <string>
 #include <vector>
 
 #include <boost/cstdint.hpp>
-#include <boost/shared_array.hpp>
-#include <boost/make_shared.hpp>
-#include <boost/system/api_config.hpp>
 #include <boost/date_time.hpp>
+#include <boost/make_shared.hpp>
+#include <boost/shared_array.hpp>
+#include <boost/system/api_config.hpp>
 
 #include <manacommons/utf8/utf8.h> // Used to convert windows UTF-16 strings into UTF-8
 
@@ -38,19 +38,18 @@
 
 // Some miscellaneous functions are exported
 #if defined BOOST_WINDOWS_API
-	#ifdef MANAPE_EXPORT
-		#define DECLSPEC    __declspec(dllexport)
-	#else
-		#define DECLSPEC    __declspec(dllimport)
-	#endif
+#ifdef MANAPE_EXPORT
+#define DECLSPEC __declspec(dllexport)
 #else
-	#define DECLSPEC
+#define DECLSPEC __declspec(dllimport)
+#endif
+#else
+#define DECLSPEC
 #endif
 
 namespace btime = boost::posix_time;
 
-namespace utils
-{
+namespace utils {
 
 typedef boost::shared_ptr<std::string> pString;
 typedef boost::shared_ptr<btime::ptime> pptime;
@@ -60,16 +59,15 @@ typedef boost::shared_ptr<btime::ptime> pptime;
 #pragma warning(disable : 4146)
 /**
  *	@brief	Performs a ROL operation on a 32 bit integer.
- *	
+ *
  *	@param	x The integer to operate on.
  *	@param	n How much to rotate.
- *	
+ *
  *	@return x ROL n
  */
-inline boost::uint32_t rol32(boost::uint32_t x, boost::uint32_t n)
-{
-	n = n % 32;
-	return (x << n) | (x >> (-n & 31));
+inline boost::uint32_t rol32(boost::uint32_t x, boost::uint32_t n) {
+    n = n % 32;
+    return (x << n) | (x >> (-n & 31));
 }
 #pragma warning(pop)
 
@@ -78,12 +76,14 @@ inline boost::uint32_t rol32(boost::uint32_t x, boost::uint32_t n)
  *
  *	/!\ The file cursor will be updated accordingly!
  *
- *	@param	FILE* f The file from which to read. The read will occur at the cursor's current position!
- *	@param	int max_bytes The maximum number of bytes to read from the file. 0 means no limit.
+ *	@param	FILE* f The file from which to read. The read will occur at the cursor's
+ *current position!
+ *	@param	int max_bytes The maximum number of bytes to read from the file. 0 means no
+ *limit.
  *
  *	@return	The ASCII string at the current location in the file.
  */
-std::string read_ascii_string(FILE* f, unsigned int max_bytes = 0);
+std::string read_ascii_string(FILE *f, unsigned int max_bytes = 0);
 
 // ----------------------------------------------------------------------------
 
@@ -92,11 +92,12 @@ std::string read_ascii_string(FILE* f, unsigned int max_bytes = 0);
  *
  *	/!\ The file cursor will be updated accordingly!
  *
- *	@param	FILE* f The file from which to read. The read will occur at the cursor's current position!
+ *	@param	FILE* f The file from which to read. The read will occur at the cursor's
+ *current position!
  *
  *	@return	The string at the current location in the file, encoded as UTF-8.
  */
-std::string read_prefixed_unicode_string(FILE* f);
+std::string read_prefixed_unicode_string(FILE *f);
 
 // ----------------------------------------------------------------------------
 
@@ -105,11 +106,12 @@ std::string read_prefixed_unicode_string(FILE* f);
  *
  *	/!\ The file cursor will be updated accordingly!
  *
- *	@param	FILE* f The file from which to read. The read will occur at the cursor's current position!
+ *	@param	FILE* f The file from which to read. The read will occur at the cursor's
+ *current position!
  *
  *	@return	The string at the current location in the file.
  */
-std::wstring read_prefixed_unicode_wstring(FILE* f);
+std::wstring read_prefixed_unicode_wstring(FILE *f);
 
 // ----------------------------------------------------------------------------
 
@@ -118,13 +120,15 @@ std::wstring read_prefixed_unicode_wstring(FILE* f);
  *
  *	/!\ The file cursor will be updated accordingly!
  *
- *	@param	FILE* f The file from which to read. The read will occur at the cursor's current position!
- *	@param	int max_bytes The maximum number of bytes to read from the file. 0 means no limit.
- *			If this parameter is odd, it will be rounded to max_bytes-1 since bytes are read two by two.
+ *	@param	FILE* f The file from which to read. The read will occur at the cursor's
+ *current position!
+ *	@param	int max_bytes The maximum number of bytes to read from the file. 0 means no
+ *limit. If this parameter is odd, it will be rounded to max_bytes-1 since bytes are read
+ *two by two.
  *
  *	@return	The string at the current location in the file, encoded as UTF-8.
  */
-std::string read_unicode_string(FILE* f, unsigned int max_bytes = 0);
+std::string read_unicode_string(FILE *f, unsigned int max_bytes = 0);
 
 // ----------------------------------------------------------------------------
 
@@ -136,12 +140,13 @@ std::string read_unicode_string(FILE* f, unsigned int max_bytes = 0);
  *	@param	FILE* f The file from which to read.
  *	@param	unsigned int offset	The location in the file to read.
  *	@param	std::string& out The string into which the result should be saved
- *	@param	bool unicode Set to true if the string is unicode (well, Windows' definition of
- *			unicode anyway). Default is false.
+ *	@param	bool unicode Set to true if the string is unicode (well, Windows' definition
+ *of unicode anyway). Default is false.
  *
  *	@return	Whether a string was successfully read.
  */
-bool read_string_at_offset(FILE* f, unsigned int offset, std::string& out, bool unicode = false);
+bool read_string_at_offset(FILE *f, unsigned int offset, std::string &out,
+                           bool unicode = false);
 
 // ----------------------------------------------------------------------------
 
@@ -154,7 +159,7 @@ bool read_string_at_offset(FILE* f, unsigned int offset, std::string& out, bool 
  *
  *	@return	The entropy of the byte stream.
  */
-double DECLSPEC shannon_entropy(const std::vector<boost::uint8_t>& bytes);
+DECLSPEC double shannon_entropy(const std::vector<boost::uint8_t> &bytes);
 
 // ----------------------------------------------------------------------------
 
@@ -165,7 +170,7 @@ double DECLSPEC shannon_entropy(const std::vector<boost::uint8_t>& bytes);
  *
  *	@return	A human readable string representing the given timestamp.
  */
-pString DECLSPEC timestamp_to_string(boost::uint64_t epoch_timestamp);
+DECLSPEC pString timestamp_to_string(boost::uint64_t epoch_timestamp);
 
 // ----------------------------------------------------------------------------
 
@@ -176,7 +181,7 @@ pString DECLSPEC timestamp_to_string(boost::uint64_t epoch_timestamp);
  *
  *	@return	A shared boost ptime object representing the given timestamp.
  */
-pptime DECLSPEC dosdate_to_btime(boost::uint32_t dosdate);
+DECLSPEC pptime dosdate_to_btime(boost::uint32_t dosdate);
 
 // ----------------------------------------------------------------------------
 
@@ -187,18 +192,20 @@ pptime DECLSPEC dosdate_to_btime(boost::uint32_t dosdate);
  *
  *	@return	A human readable string representing the given timestamp.
  */
-pString DECLSPEC dosdate_to_string(boost::uint32_t dosdate);
+DECLSPEC pString dosdate_to_string(boost::uint32_t dosdate);
 
 // ----------------------------------------------------------------------------
 /**
  *  @brief  This helper function compares a dosdate and the PE timestamp to
  *          check whether the dosdate is actually a posix timestamp.
- *          
+ *
  *  @param  dosdate The dosdate to test.
  *  @param  pe_timestamp The reference posix time (typically, the PE compilation
  *          date from the PE header.
  *  @param  threshold How close the two timestamps should be to determine that
  *          the dosdate is actually a posix timestamp (default is 0.1%).
  */
-bool DECLSPEC is_actually_posix(boost::uint32_t dosdate, boost::uint32_t pe_timestamp, float threshold = 0.001);
-}
+DECLSPEC bool is_actually_posix(boost::uint32_t dosdate, boost::uint32_t pe_timestamp,
+                                float threshold = 0.001);
+
+} // namespace utils
