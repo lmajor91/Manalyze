@@ -24,8 +24,10 @@ along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 #include <boost/shared_array.hpp>
 #include <boost/system/api_config.hpp>
 
-#ifndef __MANA_COMMONS_TYPES__
-#define __MANA_COMMONS_TYPES__ 1
+#include "../types.h"
+
+#ifndef __MANACOMMONS_TYPES__
+#define __MANACOMMONS_TYPES__ 1
 
 #if defined BOOST_WINDOWS_API && !defined CRYPTOLIB_API
 #ifdef CRYPTOLIB_EXPORT
@@ -40,9 +42,9 @@ along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 namespace crypto {
 
 /**
- * This exists to marry the Windows and OpenSSL implementation of various hashing functions
- * together. Solely because Windows acquires hashing functions via. integers and OpenSSL
- * acquires hashing functions via. function calls or by strings.
+ * This exists to marry the Windows and OpenSSL implementation of various hashing
+ * functions together. Solely because Windows acquires hashing functions via. integers and
+ * OpenSSL acquires hashing functions via. function calls or by strings.
  *
  * This interface is here to provide a platform independent way of obtaining a refernce to
  * either one.
@@ -51,10 +53,6 @@ enum __algorithm_t { MD5, SHA1, NONE };
 
 typedef crypto::__algorithm_t algorithm_t;
 
-typedef boost::shared_ptr<std::string> pString;
-typedef boost::shared_ptr<std::vector<std::string> > shared_strings;
-typedef boost::shared_ptr<const std::vector<std::string> > const_shared_strings;
-
 } // namespace crypto
 
-#endif // __MANA_COMMONS_TYPES__
+#endif // __MANACOMMONS_TYPES__

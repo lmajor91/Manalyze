@@ -27,8 +27,8 @@ along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 #include <openssl/evp.h>
 #endif
 
-#ifndef __MANA_COMMONS_HASH__
-#define __MANA_COMMONS_HASH__ 1
+#ifndef __MANACOMMONS_HASH__
+#define __MANACOMMONS_HASH__ 1
 
 namespace crypto {
 
@@ -127,4 +127,4 @@ typedef boost::shared_ptr<Hash> pHash;
 
 } // namespace crypto
 
-#endif // __MANA_COMMONS_HASH__
+#endif // __MANACOMMONS_HASH__
