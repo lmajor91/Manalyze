@@ -17,7 +17,7 @@
 
 #include "manacommons/escape.h"
 
-namespace io
+namespace mana::io
 {
 	
 pString escape(const std::string& s) {

@@ -31,7 +31,7 @@ along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef __MANACOMMONS_HASH__
 #define __MANACOMMONS_HASH__ 1
 
-namespace manacommons::crypto {
+namespace mana::crypto {
 
 // templating the class to forcibly type the context
 class Hash {

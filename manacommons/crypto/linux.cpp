@@ -32,7 +32,7 @@ along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 // only compile this if building for Windows
 #if !defined(WINDOWS)
 
-namespace manacommons::crypto {
+namespace mana::crypto {
 
 DECLSPEC_MANACOMMONS Hash::Hash(crypto::algorithm_t name) {
     // copying the name

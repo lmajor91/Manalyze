@@ -33,7 +33,7 @@
 #ifndef __MANACOMMONS_COLOR__
 #define __MANACOMMONS_COLOR__ 1
 
-namespace manacommons::utils {
+namespace mana::io {
 
 enum Color { RED, GREEN, YELLOW, RESET };
 
@@ -63,9 +63,9 @@ DECLSPEC_MANACOMMONS std::ostream &print_colored_text(const std::string &text, C
                                                       const std::string &suffix = "");
 
 #define PRINT_ERROR                                                                      \
-    utils::print_colored_text("!", utils::RED, std::cerr, "[", "] Error: ")
+    mana::io::print_colored_text("!", io::RED, std::cerr, "[", "] Error: ")
 #define PRINT_WARNING                                                                    \
-    utils::print_colored_text("*", utils::YELLOW, std::cerr, "[", "] Warning: ")
+    mana::io::print_colored_text("*", io::YELLOW, std::cerr, "[", "] Warning: ")
 
 #define LOG_CAP 100
 
@@ -75,10 +75,9 @@ DECLSPEC_MANACOMMONS std::ostream &print_colored_text(const std::string &text, C
 DECLSPEC_MANACOMMONS bool is_log_cap_reached();
 
 // Macros to add around very verbose warnings to avoid flooding stderr.
-#define CAPPED_LOGGING if (!utils::is_log_cap_reached()) {
+#define CAPPED_LOGGING if (!mana::io::is_log_cap_reached()) {
 #define CAPPED_LOGGING_END }
 
-// TODO: Add these macros to all errors and warnings.
 #ifdef DEBUG
 #define DEBUG_INFO " (" << __FILE__ << ":" << std::dec << __LINE__ << ")"
 #define DEBUG_INFO_PE                                                                    \
@@ -91,6 +90,6 @@ DECLSPEC_MANACOMMONS bool is_log_cap_reached();
 #define DEBUG_INFO_INSIDEPE ""
 #endif
 
-} // namespace utils
+} // namespace mana::io
 
 #endif // __MANACOMMONS_COLOR__

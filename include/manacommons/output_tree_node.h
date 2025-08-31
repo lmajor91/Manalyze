@@ -31,7 +31,7 @@ along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 #include "plugin_framework/threat_level.h"
 #include "types.h"
 
-namespace manacommons::io {
+namespace mana::io {
 
 typedef boost::shared_ptr<boost::optional<boost::uint32_t>> shared_opt_uint32;
 typedef boost::shared_ptr<boost::optional<boost::uint16_t>> shared_opt_uint16;

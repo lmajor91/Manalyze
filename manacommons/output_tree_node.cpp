@@ -19,7 +19,7 @@ along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "manacommons/output_tree_node.h"
 
-namespace io
+namespace mana::io
 {
 
 size_t determine_max_width(pNode node)

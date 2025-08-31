@@ -17,7 +17,7 @@
 
 #include "manacommons/base64.h"
 
-namespace manacommons::utils {
+namespace mana::utils {
 
 // aliasing a namespace because I don't feel like typing it out
 namespace biter = boost::archive::iterators;
