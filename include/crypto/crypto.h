@@ -15,8 +15,8 @@ You should have received a copy of the GNU General Public License
 along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef __MANA_COMMONS_CRYPTO__
-#define __MANA_COMMONS_CRYPTO__ 1
+#ifndef __MANACOMMONS_CRYPTO__
+#define __MANACOMMONS_CRYPTO__ 1
 
 #include <string>
 #include <vector>
@@ -30,6 +30,7 @@ along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "hash.h"
 #include "types.h"
+#include "manape/pe.h"
 
 namespace crypto {
 
@@ -102,6 +103,16 @@ CRYPTOLIB_API const_shared_strings hash_file(const std::vector<pHash> &digests,
 CRYPTOLIB_API const_shared_strings hash_bytes(const std::vector<pHash> &digests,
                                               const std::vector<boost::uint8_t> &bytes);
 
+/**
+ *	@brief	Computes the hash of a PE's imports.
+ *	Per http://www.mandiant.com/blog/tracking-malware-import-hashing/
+ *
+ *	@return	A MD5 hash of the ordered import list.
+ *
+ *	Implementation is located in imports.cpp.
+ */
+CRYPTOLIB_API const std::string hash_imports(const mana::PE& pe);
+
 } // namespace crypto
 
-#endif // __MANA_COMMONS_CRYPTO__
+#endif // __MANACOMMONS_CRYPTO__
