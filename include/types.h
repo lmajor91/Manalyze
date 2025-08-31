@@ -21,6 +21,7 @@
 #include <string>
 #include <vector>
 
+#include <boost/date_time.hpp>
 #include <boost/archive/iterators/base64_from_binary.hpp>
 #include <boost/archive/iterators/insert_linebreaks.hpp>
 #include <boost/archive/iterators/ostream_iterator.hpp>
@@ -33,13 +34,25 @@
 #ifndef __MANALYZE_TYPES__
 #define __MANALYZE_TYPES__ 1
 
+/**
+This is a collection of globally used types that literally everything uses.
+This is to have them all contained in one file.
+*/
+
+#pragma region globally used types
+
+typedef boost::shared_ptr<const std::vector<boost::uint8_t>> shared_bytes;
 typedef boost::shared_ptr<std::string> pString;
 typedef boost::shared_ptr<std::vector<std::string>> shared_strings;
 typedef boost::shared_ptr<const std::vector<std::string>> const_shared_strings;
 typedef std::vector<std::string> strings;
 typedef std::set<std::string> string_set;
-
+typedef boost::shared_ptr<const std::vector<boost::uint8_t>> shared_bytes;
 typedef std::map<std::string, std::string> string_map;
 typedef boost::shared_ptr<const std::map<std::string, std::string>> shared_string_map;
+typedef boost::shared_ptr<FILE> pFile;
+typedef boost::shared_ptr<boost::posix_time::ptime> pptime;
+
+#pragma endregion
 
 #endif // __MANALYZE_TYPES__

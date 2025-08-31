@@ -83,7 +83,7 @@ class OutputTreeNode {
     enum display_modifier { NONE, DEC, HEX, AFTER_NAME, NEW_LINE, HIDE_NAME };
 
 #pragma endregion
-#pragma region fields
+#pragma region private fields
 
   private:
     pString _name;
@@ -102,7 +102,7 @@ class OutputTreeNode {
                                 // displayed, i.e. hexadecimal or decimal for integers.
 
 #pragma endregion
-#pragma region methods
+#pragma region public methods
   public:
     // ----------------------------------------------------------------------------
 
@@ -296,11 +296,8 @@ class OutputTreeNode {
      *	@return	A pointer which may point to the located node, or be NULL.
      */
     DECLSPEC_MANACOMMONS pNode find_node(const std::string &name) const;
-
 #pragma endregion
 };
-
-// unpacking the type from within the object
 typedef OutputTreeNode::pNode pNode;
 
 /**

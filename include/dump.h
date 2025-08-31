@@ -34,21 +34,21 @@
 
 namespace mana
 {
-void dump_dos_header(const mana::PE& pe, io::OutputFormatter& formatter);
-void dump_pe_header(const mana::PE& pe, io::OutputFormatter& formatter);
-void dump_image_optional_header(const mana::PE& pe, io::OutputFormatter& formatter);
-void dump_section_table(const mana::PE& pe, io::OutputFormatter& formatter, bool compute_hashes = false);
-void dump_imports(const mana::PE& pe, io::OutputFormatter& formatter);
-void dump_exports(const mana::PE& pe, io::OutputFormatter& formatter);
-void dump_resources(const mana::PE& pe, io::OutputFormatter& formatter, bool compute_hashes = false);
-void dump_version_info(const mana::PE& pe, io::OutputFormatter& formatter);
-void dump_debug_info(const mana::PE& pe, io::OutputFormatter& formatter);
-void dump_tls(const mana::PE& pe, io::OutputFormatter& formatter);
-void dump_config(const mana::PE&pe, io::OutputFormatter& formatter);
-void dump_summary(const mana::PE& pe, io::OutputFormatter& formatter);
-void dump_hashes(const mana::PE& pe, io::OutputFormatter& formatter);
-void dump_dldt(const mana::PE& pe, io::OutputFormatter& formatter);
-void dump_rich_header(const mana::PE& pe, io::OutputFormatter& formatter);
+void dump_dos_header(const pe::PE& pe, io::OutputFormatter& formatter);
+void dump_pe_header(const pe::PE& pe, io::OutputFormatter& formatter);
+void dump_image_optional_header(const pe::PE& pe, io::OutputFormatter& formatter);
+void dump_section_table(const pe::PE& pe, io::OutputFormatter& formatter, bool compute_hashes = false);
+void dump_imports(const pe::PE& pe, io::OutputFormatter& formatter);
+void dump_exports(const pe::PE& pe, io::OutputFormatter& formatter);
+void dump_resources(const pe::PE& pe, io::OutputFormatter& formatter, bool compute_hashes = false);
+void dump_version_info(const pe::PE& pe, io::OutputFormatter& formatter);
+void dump_debug_info(const pe::PE& pe, io::OutputFormatter& formatter);
+void dump_tls(const pe::PE& pe, io::OutputFormatter& formatter);
+void dump_config(const pe::PE&pe, io::OutputFormatter& formatter);
+void dump_summary(const pe::PE& pe, io::OutputFormatter& formatter);
+void dump_hashes(const pe::PE& pe, io::OutputFormatter& formatter);
+void dump_dldt(const pe::PE& pe, io::OutputFormatter& formatter);
+void dump_rich_header(const pe::PE& pe, io::OutputFormatter& formatter);
 
 /**
  * @brief   Detects the filetype of a given resource based on magic numbers contained
@@ -59,7 +59,7 @@ void dump_rich_header(const mana::PE& pe, io::OutputFormatter& formatter);
  *          cases, but so-called polyglot files can be of multiple file types at the
  *          same type.
  */
-yara::const_matches detect_filetype(mana::pResource resource);
+yara::const_matches detect_filetype(pe::pResource resource);
 
 /**
  * @brief   Extracts resources from a PE file.
@@ -72,18 +72,18 @@ yara::const_matches detect_filetype(mana::pResource resource);
  *	* RT_BITMAP as .bmp files. The bitmap header is reconstructed.
  *	* RT_MANIFEST as .xml files.
  *
- * @param   const mana::PE& pe The PE whose resources we want extracted.
+ * @param   const pe::PE& pe The PE whose resources we want extracted.
  * @param   const std::string& destination_folder The folder into which the
  *          extracted files should be placed.
  *
  * @return  Whether the extraction was successful.
  */
-bool extract_resources(const mana::PE& pe, const std::string& destination_folder);
+bool extract_resources(const pe::PE& pe, const std::string& destination_folder);
 
 /**
  *	@brief	Extracts the certificates used for the Authenticode signature of the PE.
  *
- *  @param  const mana::PE& pe The PE whose certificates we want extracted.
+ *  @param  const pe::PE& pe The PE whose certificates we want extracted.
  *	@param	const std::string& destination_folder The folder into which the certificates should
  *			be placed.
  *	@param	const std::string& filename The name of the file which in which the certificate will
@@ -92,7 +92,7 @@ bool extract_resources(const mana::PE& pe, const std::string& destination_folder
  *
  *	@return	Whether the extraction was successful or not.
  */
-bool extract_authenticode_certificates(const mana::PE& pe,
+bool extract_authenticode_certificates(const pe::PE& pe,
                                        const std::string& destination_folder,
                                        const std::string& filename = "");
 

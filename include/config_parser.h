@@ -1,30 +1,32 @@
 /*
-    This file is part of Manalyze.
+This file is part of Manalyze.
 
-    Manalyze is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+Manalyze is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
-    Manalyze is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+Manalyze is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
+You should have received a copy of the GNU General Public License
+along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#pragma once
-
-#include <string>
-#include <map>
 #include <fstream>
+#include <map>
+#include <string>
+
 #include <boost/spirit/include/qi.hpp>
 
 #include "manacommons/color.h"
 
-typedef std::map<std::string, std::map<std::string, std::string> > config;
+#ifndef __MANALYZE_CONFIG_PARSER__
+#define __MANALYZE_CONFIG_PARSER__ 1
+
+typedef std::map<std::string, std::map<std::string, std::string>> config;
 
 /**
  *	@brief	Parses a configuration file.
@@ -45,4 +47,6 @@ typedef std::map<std::string, std::map<std::string, std::string> > config;
  *
  *	@return	The parsed data.
  */
-config parse_config(const std::string& config_file);
+config parse_config(const std::string &config_file);
+
+#endif // __MANALYZE_CONFIG_PARSER__

@@ -1,18 +1,18 @@
 /*
-    This file is part of Manalyze.
+This file is part of Manalyze.
 
-    Manalyze is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+Manalyze is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
-    Manalyze is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+Manalyze is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
+You should have received a copy of the GNU General Public License
+along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <map>
@@ -43,7 +43,7 @@ class IPlugin {
      *	@return	A shared pointer to a result object, representing the information obtained
      *			by the plugin.
      */
-    virtual pResult analyze(const mana::PE &pe) = 0;
+    virtual pResult analyze(const pe::PE &pe) = 0;
 
     /**
      *	@brief	Returns the API version for which this plugin was compiled.
@@ -90,7 +90,6 @@ class IPlugin {
   protected:
     shared_string_map _config;
 };
-
 typedef boost::shared_ptr<IPlugin> pIPlugin;
 
 } // namespace mana::plugin
