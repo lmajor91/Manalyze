@@ -15,6 +15,7 @@
     along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <map>
 #include <set>
 #include <sstream>
 #include <string>
@@ -37,5 +38,8 @@ typedef boost::shared_ptr<std::vector<std::string>> shared_strings;
 typedef boost::shared_ptr<const std::vector<std::string>> const_shared_strings;
 typedef std::vector<std::string> strings;
 typedef std::set<std::string> string_set;
+
+typedef std::map<std::string, std::string> string_map;
+typedef boost::shared_ptr<const std::map<std::string, std::string>> shared_string_map;
 
 #endif // __MANALYZE_TYPES__
