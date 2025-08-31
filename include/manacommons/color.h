@@ -33,7 +33,7 @@
 #ifndef __MANACOMMONS_COLOR__
 #define __MANACOMMONS_COLOR__ 1
 
-namespace utils {
+namespace manacommons::utils {
 
 enum Color { RED, GREEN, YELLOW, RESET };
 

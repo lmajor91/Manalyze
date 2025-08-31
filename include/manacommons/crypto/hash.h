@@ -20,6 +20,7 @@ along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 #include <string>
 
 #include "portability.h"
+#include "manacommons/export.h"
 #include "manacommons/crypto/algorithms.h"
 
 #if defined(WINDOWS)
@@ -30,7 +31,7 @@ along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef __MANACOMMONS_HASH__
 #define __MANACOMMONS_HASH__ 1
 
-namespace crypto {
+namespace manacommons::crypto {
 
 // templating the class to forcibly type the context
 class Hash {
@@ -60,26 +61,26 @@ class Hash {
   public:
     // These functions are platform specific and will need to be defined
     // by all platforms.
-    Hash();
-    Hash(crypto::algorithm_t name);
-    ~Hash();
+    DECLSPEC_MANACOMMONS Hash();
+    DECLSPEC_MANACOMMONS Hash(crypto::algorithm_t name);
+    DECLSPEC_MANACOMMONS ~Hash();
 
 // in case you still want to access the internal context block
 #if defined(WINDOWS)
-    void *get_ctx() { return this->ctx; }
+    DECLSPEC_MANACOMMONS void *get_ctx() { return this->ctx; }
 #else
-    EVP_MD_CTX *get_ctx() { return this->_ctx; }
+    DECLSPEC_MANACOMMONS EVP_MD_CTX *get_ctx() { return this->_ctx; }
 #endif
 
 // in case you still want access to the internal hashing algorithm
 #if defined(WINDOWS)
-    void *get_algorithm() { return this->ctx; }
+    DECLSPEC_MANACOMMONS void *get_algorithm() { return this->ctx; }
 #else
-    EVP_MD *get_algorithm() { return this->_algo; }
+    DECLSPEC_MANACOMMONS EVP_MD *get_algorithm() { return this->_algo; }
 #endif
 
     /// compute hash of a memory block
-    std::string operator()(const void *data, size_t numBytes) {
+    DECLSPEC_MANACOMMONS std::string operator()(const void *data, size_t numBytes) {
         // adding the bytes
         this->add(data, numBytes);
 
@@ -88,7 +89,7 @@ class Hash {
     }
 
     /// compute hash of a string, excluding final zero
-    std::string operator()(const std::string &text) {
+    DECLSPEC_MANACOMMONS std::string operator()(const std::string &text) {
         // adding the bytes
         this->add(text.c_str(), text.length());
 
@@ -103,19 +104,19 @@ class Hash {
      *	@param	data the bytes to ingest
      *	@param	numBytes the number of bytes to ingest
      */
-    void add(const void *data, size_t numBytes);
+    DECLSPEC_MANACOMMONS void add(const void *data, size_t numBytes);
 
     /**
      * @brief	Returns the hexadecimal representation of the hashed contents.
      * @returns
      */
-    std::string get_hash();
+    DECLSPEC_MANACOMMONS std::string get_hash();
 
     /**
      * @brief Resets the state of the context. This should make the internal context ready
      * to be reused.
      */
-    void reset();
+    DECLSPEC_MANACOMMONS void reset();
 };
 
 #pragma endregion

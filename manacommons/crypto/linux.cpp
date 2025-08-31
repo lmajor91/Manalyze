@@ -32,9 +32,9 @@ along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 // only compile this if building for Windows
 #if !defined(WINDOWS)
 
-namespace crypto {
+namespace manacommons::crypto {
 
-Hash::Hash(crypto::algorithm_t name) {
+DECLSPEC_MANACOMMONS Hash::Hash(crypto::algorithm_t name) {
     // copying the name
     this->name = name;
 
@@ -64,7 +64,7 @@ Hash::Hash(crypto::algorithm_t name) {
     }
 };
 
-Hash::~Hash() {
+DECLSPEC_MANACOMMONS Hash::~Hash() {
     // it's really weird if only one of these is defined, but i'm not
     // gonna judge
     if (this->_algo != nullptr) {
@@ -76,9 +76,9 @@ Hash::~Hash() {
     }
 }
 
-inline void Hash::reset() { EVP_MD_CTX_reset(this->_ctx); }
+DECLSPEC_MANACOMMONS inline void Hash::reset() { EVP_MD_CTX_reset(this->_ctx); }
 
-void Hash::add(const void *data, size_t numBytes) {
+DECLSPEC_MANACOMMONS void Hash::add(const void *data, size_t numBytes) {
     // checking
     assert(this->_ctx != nullptr);
     assert(this->_algo != nullptr);
@@ -95,7 +95,7 @@ void Hash::add(const void *data, size_t numBytes) {
     }
 }
 
-std::string Hash::get_hash() {
+DECLSPEC_MANACOMMONS std::string Hash::get_hash() {
     // checking
     assert(this->_ctx != nullptr);
     assert(this->_algo != nullptr);

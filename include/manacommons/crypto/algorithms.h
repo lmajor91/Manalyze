@@ -27,7 +27,7 @@ along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef __MANACOMMONS_TYPES__
 #define __MANACOMMONS_TYPES__ 1
 
-namespace crypto {
+namespace manacommons::crypto {
 
 /**
  * This exists to marry the Windows and OpenSSL implementation of various hashing

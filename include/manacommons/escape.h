@@ -28,7 +28,7 @@ along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 #include "manacommons/export.h"
 #include "manacommons/color.h"
 
-namespace io {
+namespace manacommons::io {
 
 // ----------------------------------------------------------------------------
 // Grammars used to escape stings

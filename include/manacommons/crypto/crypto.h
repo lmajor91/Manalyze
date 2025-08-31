@@ -33,7 +33,7 @@ along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 #include "manacommons/export.h"
 #include "manape/pe.h"
 
-namespace crypto {
+namespace manacommons::crypto {
 
 /**
  * @brief Gets a reference to a hashing algorithm by an enum.

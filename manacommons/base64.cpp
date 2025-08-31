@@ -17,7 +17,10 @@
 
 #include "manacommons/base64.h"
 
-namespace utils {
+namespace manacommons::utils {
+
+// aliasing a namespace because I don't feel like typing it out
+namespace biter = boost::archive::iterators;
 
 pString b64encode(const std::vector<boost::uint8_t> &bytes) {
     if (bytes.size() == 0) {

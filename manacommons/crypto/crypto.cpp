@@ -22,7 +22,7 @@ along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 #include "manacommons/export.h"
 #include "portability.h"
 
-namespace crypto {
+namespace manacommons::crypto {
 
 DECLSPEC_MANACOMMONS boost::shared_ptr<Hash> get_algorithm(algorithm_t algo) {
     switch (algo) {
@@ -56,4 +56,4 @@ DECLSPEC_MANACOMMONS const std::string bytes_to_hex(const void *data, size_t len
     return std::string("bytes_to_hex is not implemented yet");
 }
 
-}; // namespace crypto
+}; // namespace manacommons::crypto

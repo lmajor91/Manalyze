@@ -34,7 +34,7 @@ along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef __MANACOMMONS_BASE64__
 #define __MANACOMMONS_BASE64__ 1
 
-namespace utils {
+namespace manacommons::utils {
 
 // ----------------------------------------------------------------------------
 
