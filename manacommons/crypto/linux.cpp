@@ -76,7 +76,8 @@ Hash::~Hash() {
     }
 }
 
-/// add arbitrary number of bytes
+inline void Hash::reset() { EVP_MD_CTX_reset(this->_ctx); }
+
 void Hash::add(const void *data, size_t numBytes) {
     // checking
     assert(this->_ctx != nullptr);
@@ -94,7 +95,6 @@ void Hash::add(const void *data, size_t numBytes) {
     }
 }
 
-/// return latest hash as hex characters
 std::string Hash::get_hash() {
     // checking
     assert(this->_ctx != nullptr);

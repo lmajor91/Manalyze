@@ -110,6 +110,12 @@ class Hash {
      * @returns
      */
     std::string get_hash();
+
+    /**
+     * @brief Resets the state of the context. This should make the internal context ready
+     * to be reused.
+     */
+    void reset();
 };
 
 #pragma endregion
