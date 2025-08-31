@@ -27,7 +27,6 @@ along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef __MANA_COMMONS_TYPES__
 #define __MANA_COMMONS_TYPES__ 1
 
-// exporting to windows shit
 #if defined BOOST_WINDOWS_API && !defined CRYPTOLIB_API
 #ifdef CRYPTOLIB_EXPORT
 #define CRYPTOLIB_API __declspec(dllexport)
@@ -40,7 +39,14 @@ along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace crypto {
 
-// an enum to track hashing algorithms
+/**
+ * This exists to marry the Windows and OpenSSL implementation of various hashing functions
+ * together. Solely because Windows acquires hashing functions via. integers and OpenSSL
+ * acquires hashing functions via. function calls or by strings.
+ *
+ * This interface is here to provide a platform independent way of obtaining a refernce to
+ * either one.
+ */
 enum __algorithm_t { MD5, SHA1, NONE };
 
 typedef crypto::__algorithm_t algorithm_t;
