@@ -84,3 +84,6 @@ external/
 
 # Signing script
 bin/sign_all.bat
+
+# ignoring .vscode
+.vscode
