@@ -26,6 +26,7 @@ along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 #include <boost/make_shared.hpp>
 #include <boost/shared_array.hpp>
 #include <boost/system/api_config.hpp>
+#include <boost/smart_ptr/shared_ptr.hpp>
 
 #include "hash.h"
 #include "types.h"
@@ -36,7 +37,7 @@ namespace crypto {
  * @brief Gets a reference to a hashing algorithm by an enum.
  * @returns An object for hashing.
  */
-CRYPTOLIB_API Hash *get_algorithm(crypto::algorithm_t algo);
+CRYPTOLIB_API boost::shared_ptr<Hash> get_algorithm(crypto::algorithm_t algo);
 
 /**
  * @brief Converts a series of bytes into hexadecimal, all lowercase.
