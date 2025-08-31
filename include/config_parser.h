@@ -24,8 +24,6 @@
 
 #include "manacommons/color.h"
 
-namespace qi = boost::spirit::qi;
-
 typedef std::map<std::string, std::map<std::string, std::string> > config;
 
 /**
