@@ -24,20 +24,8 @@ along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 #include <boost/shared_array.hpp>
 #include <boost/system/api_config.hpp>
 
-#include "../types.h"
-
 #ifndef __MANACOMMONS_TYPES__
 #define __MANACOMMONS_TYPES__ 1
-
-#if defined BOOST_WINDOWS_API && !defined CRYPTOLIB_API
-#ifdef CRYPTOLIB_EXPORT
-#define CRYPTOLIB_API __declspec(dllexport)
-#else
-#define CRYPTOLIB_API __declspec(dllimport)
-#endif
-#elif !defined BOOST_WINDOWS_API && !defined CRYPTOLIB_API
-#define CRYPTOLIB_API
-#endif
 
 namespace crypto {
 

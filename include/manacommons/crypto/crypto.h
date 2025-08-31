@@ -25,11 +25,12 @@ along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 #include <boost/cstdint.hpp>
 #include <boost/make_shared.hpp>
 #include <boost/shared_array.hpp>
-#include <boost/system/api_config.hpp>
 #include <boost/smart_ptr/shared_ptr.hpp>
+#include <boost/system/api_config.hpp>
 
-#include "hash.h"
-#include "types.h"
+#include "manacommons/crypto/hash.h"
+#include "manacommons/crypto/algorithms.h"
+#include "manacommons/export.h"
 #include "manape/pe.h"
 
 namespace crypto {
@@ -38,20 +39,19 @@ namespace crypto {
  * @brief Gets a reference to a hashing algorithm by an enum.
  * @returns An object for hashing.
  */
-CRYPTOLIB_API boost::shared_ptr<Hash> get_algorithm(crypto::algorithm_t algo);
+DECLSPEC_MANACOMMONS boost::shared_ptr<Hash> get_algorithm(crypto::algorithm_t algo);
 
 /**
  * @brief Converts a series of bytes into hexadecimal, all lowercase.
  * @returns The hexadecimal string of bytes.
  */
-CRYPTOLIB_API const std::string bytes_to_hex(const void *data, size_t len);
+DECLSPEC_MANACOMMONS const std::string bytes_to_hex(const void *data, size_t len);
 
 /**
  * @brief Gets the proper name of a hashing algorithm.
  * @returns The name of the hashing algorithm this object is using.
  */
-CRYPTOLIB_API const std::string algo_to_string(crypto::algorithm_t algo);
-
+DECLSPEC_MANACOMMONS const std::string algo_to_string(crypto::algorithm_t algo);
 
 /**
  *	@brief	Computes the hash of a buffer.
@@ -61,7 +61,7 @@ CRYPTOLIB_API const std::string algo_to_string(crypto::algorithm_t algo);
  *
  *	@return	A shared string containing the hash value. May be empty if an error occurred.
  */
-CRYPTOLIB_API pString hash_bytes(Hash &digest, const std::vector<boost::uint8_t> &bytes);
+DECLSPEC_MANACOMMONS pString hash_bytes(Hash &digest, const std::vector<boost::uint8_t> &bytes);
 
 /**
  *	@brief	Computes the hash of a file.
@@ -71,7 +71,7 @@ CRYPTOLIB_API pString hash_bytes(Hash &digest, const std::vector<boost::uint8_t>
  *
  *	@return	A string containing the hash value. May be empty if an error occurred.
  */
-CRYPTOLIB_API pString hash_file(Hash &digest, const std::string &filename);
+DECLSPEC_MANACOMMONS pString hash_file(Hash &digest, const std::string &filename);
 
 /**
  *	@brief	Computes the hashes of a file.
@@ -86,7 +86,7 @@ CRYPTOLIB_API pString hash_file(Hash &digest, const std::string &filename);
  *	@return	A shared vector containing all the computed hashes, in the same order as the
  *input digests. If an error occurs for any digest, the return value's size is set to 0.
  */
-CRYPTOLIB_API const_shared_strings hash_file(const std::vector<pHash> &digests,
+DECLSPEC_MANACOMMONS const_shared_strings hash_file(const std::vector<pHash> &digests,
                                              const std::string &filename);
 
 /**
@@ -100,7 +100,7 @@ CRYPTOLIB_API const_shared_strings hash_file(const std::vector<pHash> &digests,
  *	@return	A shared vector containing all the computed hashes, in the same order as the
  *input digests. If an error occurs for any digest, the return value's size is set to 0.
  */
-CRYPTOLIB_API const_shared_strings hash_bytes(const std::vector<pHash> &digests,
+DECLSPEC_MANACOMMONS const_shared_strings hash_bytes(const std::vector<pHash> &digests,
                                               const std::vector<boost::uint8_t> &bytes);
 
 /**
@@ -111,7 +111,7 @@ CRYPTOLIB_API const_shared_strings hash_bytes(const std::vector<pHash> &digests,
  *
  *	Implementation is located in imports.cpp.
  */
-CRYPTOLIB_API const std::string hash_imports(const mana::PE& pe);
+DECLSPEC_MANACOMMONS const std::string hash_imports(const mana::PE &pe);
 
 } // namespace crypto
 

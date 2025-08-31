@@ -19,8 +19,8 @@ along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 #include <stdexcept>
 #include <string>
 
-#include "../portability.h"
-#include "types.h"
+#include "portability.h"
+#include "manacommons/crypto/algorithms.h"
 
 #if defined(WINDOWS)
 #else

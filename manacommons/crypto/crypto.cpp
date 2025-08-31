@@ -15,14 +15,16 @@ You should have received a copy of the GNU General Public License
 along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "crypto/crypto.h"
-#include "portability.h"
 #include <boost/smart_ptr/make_shared_array.hpp>
 #include <boost/smart_ptr/shared_ptr.hpp>
 
+#include "manacommons/crypto/crypto.h"
+#include "manacommons/export.h"
+#include "portability.h"
+
 namespace crypto {
 
-CRYPTOLIB_API boost::shared_ptr<Hash> get_algorithm(algorithm_t algo) {
+DECLSPEC_MANACOMMONS boost::shared_ptr<Hash> get_algorithm(algorithm_t algo) {
     switch (algo) {
     case crypto::algorithm_t::MD5:
         return boost::make_shared<Hash>(Hash(algorithm_t::MD5));
@@ -36,7 +38,7 @@ CRYPTOLIB_API boost::shared_ptr<Hash> get_algorithm(algorithm_t algo) {
     }
 }
 
-CRYPTOLIB_API const std::string get_string_name(crypto::algorithm_t algo) {
+DECLSPEC_MANACOMMONS const std::string get_string_name(crypto::algorithm_t algo) {
     switch (algo) {
     case crypto::algorithm_t::MD5:
         return std::string("md5");
@@ -50,7 +52,7 @@ CRYPTOLIB_API const std::string get_string_name(crypto::algorithm_t algo) {
     }
 }
 
-CRYPTOLIB_API const std::string bytes_to_hex(const void *data, size_t len) {
+DECLSPEC_MANACOMMONS const std::string bytes_to_hex(const void *data, size_t len) {
     return std::string("bytes_to_hex is not implemented yet");
 }
 

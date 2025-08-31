@@ -19,9 +19,9 @@ along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 #include <stdexcept>
 #include <string>
 
-#include "crypto/crypto.h"
-#include "crypto/hash.h"
-#include "crypto/types.h"
+#include "manacommons/crypto/crypto.h"
+#include "manacommons/crypto/hash.h"
+#include "manacommons/crypto/algorithms.h"
 #include "portability.h"
 
 #if defined(WINDOWS)
