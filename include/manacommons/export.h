@@ -27,7 +27,7 @@ along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 #define DECLSPEC_MANACOMMONS __declspec(dllimport)
 #endif
 #elif !defined BOOST_WINDOWS_API && !defined DECLSPEC_MANACOMMONS
-#define DECLSPEC_MANACOMMONS
+#define DECLSPEC_MANACOMMONS __attribute__((visibility("default")))
 #endif
 
 #endif // __MANACOMMONS_EXPORT__
