@@ -15,8 +15,6 @@
     along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#pragma once
-
 #include <iostream>
 #include <math.h>
 #include <sstream>
@@ -27,32 +25,18 @@
 #include <vector>
 
 #include <boost/cstdint.hpp>
-#include <boost/date_time.hpp>
 #include <boost/make_shared.hpp>
 #include <boost/shared_array.hpp>
 #include <boost/system/api_config.hpp>
 
-#include <manacommons/utf8/utf8.h> // Used to convert windows UTF-16 strings into UTF-8
+#include "manacommons/utf8/utf8.h" // Used to convert windows UTF-16 strings into UTF-8
+#include "manape/export.h"
+#include "types.h"
 
-#include "manape/color.h"
+#ifndef __MANAPE_UTILS__
+#define __MANAPE_UTILS__ 1
 
-// Some miscellaneous functions are exported
-#if defined BOOST_WINDOWS_API
-#ifdef MANAPE_EXPORT
-#define DECLSPEC __declspec(dllexport)
-#else
-#define DECLSPEC __declspec(dllimport)
-#endif
-#else
-#define DECLSPEC
-#endif
-
-namespace btime = boost::posix_time;
-
-namespace utils {
-
-typedef boost::shared_ptr<std::string> pString;
-typedef boost::shared_ptr<btime::ptime> pptime;
+namespace mana::utils {
 
 // Disable the "unary minus operator applied to unsigned type" warning.
 #pragma warning(push)
@@ -83,7 +67,7 @@ inline boost::uint32_t rol32(boost::uint32_t x, boost::uint32_t n) {
  *
  *	@return	The ASCII string at the current location in the file.
  */
-std::string read_ascii_string(FILE *f, unsigned int max_bytes = 0);
+DECLSPEC_MANAPE std::string read_ascii_string(FILE *f, unsigned int max_bytes = 0);
 
 // ----------------------------------------------------------------------------
 
@@ -97,7 +81,7 @@ std::string read_ascii_string(FILE *f, unsigned int max_bytes = 0);
  *
  *	@return	The string at the current location in the file, encoded as UTF-8.
  */
-std::string read_prefixed_unicode_string(FILE *f);
+DECLSPEC_MANAPE std::string read_prefixed_unicode_string(FILE *f);
 
 // ----------------------------------------------------------------------------
 
@@ -111,7 +95,7 @@ std::string read_prefixed_unicode_string(FILE *f);
  *
  *	@return	The string at the current location in the file.
  */
-std::wstring read_prefixed_unicode_wstring(FILE *f);
+DECLSPEC_MANAPE std::wstring read_prefixed_unicode_wstring(FILE *f);
 
 // ----------------------------------------------------------------------------
 
@@ -128,7 +112,7 @@ std::wstring read_prefixed_unicode_wstring(FILE *f);
  *
  *	@return	The string at the current location in the file, encoded as UTF-8.
  */
-std::string read_unicode_string(FILE *f, unsigned int max_bytes = 0);
+DECLSPEC_MANAPE std::string read_unicode_string(FILE *f, unsigned int max_bytes = 0);
 
 // ----------------------------------------------------------------------------
 
@@ -145,8 +129,8 @@ std::string read_unicode_string(FILE *f, unsigned int max_bytes = 0);
  *
  *	@return	Whether a string was successfully read.
  */
-bool read_string_at_offset(FILE *f, unsigned int offset, std::string &out,
-                           bool unicode = false);
+DECLSPEC_MANAPE bool read_string_at_offset(FILE *f, unsigned int offset, std::string &out,
+                                           bool unicode = false);
 
 // ----------------------------------------------------------------------------
 
@@ -159,7 +143,7 @@ bool read_string_at_offset(FILE *f, unsigned int offset, std::string &out,
  *
  *	@return	The entropy of the byte stream.
  */
-DECLSPEC double shannon_entropy(const std::vector<boost::uint8_t> &bytes);
+DECLSPEC_MANAPE double shannon_entropy(const std::vector<boost::uint8_t> &bytes);
 
 // ----------------------------------------------------------------------------
 
@@ -170,7 +154,7 @@ DECLSPEC double shannon_entropy(const std::vector<boost::uint8_t> &bytes);
  *
  *	@return	A human readable string representing the given timestamp.
  */
-DECLSPEC pString timestamp_to_string(boost::uint64_t epoch_timestamp);
+DECLSPEC_MANAPE pString timestamp_to_string(boost::uint64_t epoch_timestamp);
 
 // ----------------------------------------------------------------------------
 
@@ -181,7 +165,7 @@ DECLSPEC pString timestamp_to_string(boost::uint64_t epoch_timestamp);
  *
  *	@return	A shared boost ptime object representing the given timestamp.
  */
-DECLSPEC pptime dosdate_to_btime(boost::uint32_t dosdate);
+DECLSPEC_MANAPE pptime dosdate_to_btime(boost::uint32_t dosdate);
 
 // ----------------------------------------------------------------------------
 
@@ -192,7 +176,7 @@ DECLSPEC pptime dosdate_to_btime(boost::uint32_t dosdate);
  *
  *	@return	A human readable string representing the given timestamp.
  */
-DECLSPEC pString dosdate_to_string(boost::uint32_t dosdate);
+DECLSPEC_MANAPE pString dosdate_to_string(boost::uint32_t dosdate);
 
 // ----------------------------------------------------------------------------
 /**
@@ -205,7 +189,10 @@ DECLSPEC pString dosdate_to_string(boost::uint32_t dosdate);
  *  @param  threshold How close the two timestamps should be to determine that
  *          the dosdate is actually a posix timestamp (default is 0.1%).
  */
-DECLSPEC bool is_actually_posix(boost::uint32_t dosdate, boost::uint32_t pe_timestamp,
-                                float threshold = 0.001);
+DECLSPEC_MANAPE bool is_actually_posix(boost::uint32_t dosdate,
+                                       boost::uint32_t pe_timestamp,
+                                       float threshold = 0.001);
 
-} // namespace utils
+} // namespace mana::utils
+
+#endif // __MANAPE_UTILS__
