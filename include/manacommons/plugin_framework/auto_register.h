@@ -15,12 +15,13 @@
     along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#pragma once
+#include "manacommons/plugin_framework/plugin.h"
+#include "manacommons/plugin_framework/plugin_manager.h"
 
-#include "plugin_manager.h"
-#include "plugin.h"
+#ifndef __MANACOMMONS_PLUGIN_AUTO_REGISTER__
+#define __MANACOMMONS_PLUGIN_AUTO_REGISTER__ 1
 
-namespace plugin {
+namespace mana::plugin {
 
 /**
  *	@brief	This class enables easy and automatic registration for
@@ -31,16 +32,15 @@ namespace plugin {
  *
  *	@param	class T	The class of the plugin to register.
  */
-template<class T>
-class AutoRegister
-{
-public:
-	AutoRegister()
-	{
-		pPlugin plugin = pPlugin(new StaticPlugin<T>());
-		PluginManager& pm = PluginManager::get_instance();
-		pm.register_plugin(plugin);
-	}
+template <class T> class AutoRegister {
+  public:
+    AutoRegister() {
+        pPlugin plugin = pPlugin(new StaticPlugin<T>());
+        PluginManager &pm = PluginManager::get_instance();
+        pm.register_plugin(plugin);
+    }
 };
 
-} // !namespace plugin
+} // namespace plugin
+
+#endif // __MANACOMMONS_PLUGIN_AUTO_REGISTER__

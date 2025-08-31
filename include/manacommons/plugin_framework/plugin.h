@@ -15,11 +15,12 @@
     along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#pragma once
+#include "manacommons/plugin_framework/plugin_interface.h"
 
-#include "plugin_interface.h"
+#ifndef __MANACOMMONS_PLUGIN_PLUGIN__
+#define __MANACOMMONS_PLUGIN_PLUGIN__ 1
 
-namespace plugin {
+namespace mana::plugin {
 
 /**
  *	@brief	The generic plugin interface.
@@ -27,18 +28,17 @@ namespace plugin {
  *	All that's required of a Plugin is that it can instantiate
  *	objects which implement the IPlugin interface.
  */
-class Plugin
-{
-public:
-	Plugin() {}
-	virtual ~Plugin() {}
+class Plugin {
+  public:
+    Plugin() {}
+    virtual ~Plugin() {}
 
-	/**
-	 *	@brief	Creates an instance of the underlying plugin implementation.
-	 *
-	 *	@return	An instance of the plugin represented by this object.
-	 */
-	virtual pIPlugin instantiate_plugin() = 0;
+    /**
+     *	@brief	Creates an instance of the underlying plugin implementation.
+     *
+     *	@return	An instance of the plugin represented by this object.
+     */
+    virtual pIPlugin instantiate_plugin() = 0;
 };
 typedef boost::shared_ptr<Plugin> pPlugin;
 
@@ -52,44 +52,40 @@ typedef boost::shared_ptr<Plugin> pPlugin;
  *	For this reason, both a creator and a destructor have to be exported by the
  *	shared object.
  */
-class DynamicPlugin : public Plugin
-{
-public:
-	typedef IPlugin* (*creator)();
-	typedef void (*destroyer)(IPlugin*);
+class DynamicPlugin : public Plugin {
+  public:
+    typedef IPlugin *(*creator)();
+    typedef void (*destroyer)(IPlugin *);
 
-	DynamicPlugin(creator c, destroyer d)
-		: _creator(c), _destroyer(d)
-	{}
+    DynamicPlugin(creator c, destroyer d) : _creator(c), _destroyer(d) {}
 
-	virtual ~DynamicPlugin() {}
+    virtual ~DynamicPlugin() {}
 
-	virtual pIPlugin instantiate_plugin() override
-	{
-		if (!_destroyer) {
-			return pIPlugin(_creator());
-		}
-		else {
-			return pIPlugin(_creator(), _destroyer); // Use the destroyer provided by the library
-		}
-	}
+    virtual pIPlugin instantiate_plugin() override {
+        if (!_destroyer) {
+            return pIPlugin(_creator());
+        } else {
+            return pIPlugin(_creator(),
+                            _destroyer); // Use the destroyer provided by the library
+        }
+    }
 
-private:
-	creator		_creator;
-	destroyer	_destroyer;
+  private:
+    creator _creator;
+    destroyer _destroyer;
 };
 
 /**
  *	@brief	Represents a static plugin, i.e. a plugin that was
  *			bundled with the application.
  */
-template<class T>
-class StaticPlugin : public Plugin
-{
-public:
-	StaticPlugin() {}
-	virtual ~StaticPlugin() {}
-	virtual pIPlugin instantiate_plugin() override { return pIPlugin(new T()); }
+template <class T> class StaticPlugin : public Plugin {
+  public:
+    StaticPlugin() {}
+    virtual ~StaticPlugin() {}
+    virtual pIPlugin instantiate_plugin() override { return pIPlugin(new T()); }
 };
 
-} // !namespace plugin
+} // namespace mana::plugin
+
+#endif // __MANACOMMONS_PLUGIN_PLUGIN__

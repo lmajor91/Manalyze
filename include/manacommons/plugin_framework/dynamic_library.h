@@ -15,68 +15,71 @@
     along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#pragma once
-
-#include <string>
-#include <sstream>
 #include <iostream>
+#include <sstream>
+#include <string>
 
 #include <boost/make_shared.hpp>
 #include <boost/system/api_config.hpp>
 
 #include "manacommons/color.h"
+#include "portability.h"
 
-#ifdef BOOST_WINDOWS_API
-	#include <Windows.h>
+#if defined(WINDOWS)
+#include <Windows.h>
 #else
-	#include <dlfcn.h>
+#include <dlfcn.h>
 #endif
 
-namespace plugin {
+#ifndef __MANACOMMONS_PLUGIN_DYNAMIC_LIBRARY__
+#define __MANACOMMONS_PLUGIN_DYNAMIC_LIBRARY__ 1
+
+namespace mana::plugin {
 
 /**
  *	@brief	A somewhat multi-platform class which represents a shared object.
  */
-class SharedLibrary
-{
-public:
-	/**
-	 *	@brief	Loads a shared library.
-	 *
-	 *	SharedLibrary objects can only be instantiated through this function.
-	 *
-	 *	@param	const std::string& path The path to the shared object file to load.
-	 *
-	 *	@return	A pointer to a SharedLibrary representing the loaded file. May be NULL
-	 *			if for some reason, the library could not be loaded.
-	 */
-	static boost::shared_ptr<SharedLibrary> load(const std::string& path);
+class SharedLibrary {
+  public:
+    /**
+     *	@brief	Loads a shared library.
+     *
+     *	SharedLibrary objects can only be instantiated through this function.
+     *
+     *	@param	const std::string& path The path to the shared object file to load.
+     *
+     *	@return	A pointer to a SharedLibrary representing the loaded file. May be NULL
+     *			if for some reason, the library could not be loaded.
+     */
+    static boost::shared_ptr<SharedLibrary> load(const std::string &path);
 
-	~SharedLibrary();
+    ~SharedLibrary();
 
-	/**
-	 *	@brief	Resolves a symbol in the shared library.
-	 *
-	 *	@param	const std::string& name The name of the symbol to resolve.
-	 *
-	 *	@return	The address of the symbol in the module. May be NULL.
-	 */
-	void* resolve_symbol(const std::string& name) const;
+    /**
+     *	@brief	Resolves a symbol in the shared library.
+     *
+     *	@param	const std::string& name The name of the symbol to resolve.
+     *
+     *	@return	The address of the symbol in the module. May be NULL.
+     */
+    void *resolve_symbol(const std::string &name) const;
 
-	/**
-	 *	@brief	Cleanly unloads the shared library.
-	 */
-	void unload();
+    /**
+     *	@brief	Cleanly unloads the shared library.
+     */
+    void unload();
 
-private:
-	SharedLibrary();
-	SharedLibrary(void* handle);
-	SharedLibrary(const SharedLibrary&);
+  private:
+    SharedLibrary();
+    SharedLibrary(void *handle);
+    SharedLibrary(const SharedLibrary &);
 
-private:
-	void* _handle;
+  private:
+    void *_handle;
 };
 
 typedef boost::shared_ptr<SharedLibrary> pSharedLibrary;
 
-} //!namespace plugin
+} // namespace mana::plugin
+
+#endif // __MANACOMMONS_PLUGIN_DYNAMIC_LIBRARY__
