@@ -186,7 +186,7 @@ const flag_dict RESOURCE_TYPES =
 // ----------------------------------------------------------------------------
 
 // Source: https://msdn.microsoft.com/en-us/library/aa912040.aspx
-extern const DECLSPEC flag_dict LANG_IDS =
+extern const DECLSPEC_MANAPE flag_dict LANG_IDS =
     boost::assign::map_list_of  ("Afrikaans - South Africa",                0x0436)
                                 ("Albanian - Albania",                      0x041c)
                                 ("Arabic - Algeria",                        0x1401)

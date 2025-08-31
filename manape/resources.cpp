@@ -338,7 +338,7 @@ bool parse_version_info_header(vs_version_info_header& header, FILE* f)
 // ----------------------------------------------------------------------------
 
 template<>
-DECLSPEC pString Resource::interpret_as()
+DECLSPEC_MANAPE pString Resource::interpret_as()
 {
 	if (_type != "RT_MANIFEST")
 	{
@@ -352,7 +352,7 @@ DECLSPEC pString Resource::interpret_as()
 // ----------------------------------------------------------------------------
 
 template<>
-DECLSPEC const_shared_strings Resource::interpret_as()
+DECLSPEC_MANAPE const_shared_strings Resource::interpret_as()
 {
 	auto res = boost::make_shared<std::vector<std::string> >();
 	if (_type != "RT_STRING")
@@ -383,7 +383,7 @@ DECLSPEC const_shared_strings Resource::interpret_as()
 // ----------------------------------------------------------------------------
 
 template<>
-DECLSPEC pbitmap Resource::interpret_as()
+DECLSPEC_MANAPE pbitmap Resource::interpret_as()
 {
 	if (_type != "RT_BITMAP") {
 		return pbitmap();
@@ -421,7 +421,7 @@ DECLSPEC pbitmap Resource::interpret_as()
 // ----------------------------------------------------------------------------
 
 template<>
-DECLSPEC pgroup_icon_directory Resource::interpret_as()
+DECLSPEC_MANAPE pgroup_icon_directory Resource::interpret_as()
 {
 	if (_type != "RT_GROUP_ICON" && _type != "RT_GROUP_CURSOR") {
 		return pgroup_icon_directory();
@@ -484,7 +484,7 @@ DECLSPEC pgroup_icon_directory Resource::interpret_as()
 // ----------------------------------------------------------------------------
 
 template<>
-DECLSPEC pversion_info Resource::interpret_as()
+DECLSPEC_MANAPE pversion_info Resource::interpret_as()
 {
 	if (_type != "RT_VERSION") {
 		return pversion_info();
@@ -631,7 +631,7 @@ DECLSPEC pversion_info Resource::interpret_as()
 // ----------------------------------------------------------------------------
 
 template<>
-DECLSPEC shared_bytes Resource::interpret_as() {
+DECLSPEC_MANAPE shared_bytes Resource::interpret_as() {
 	return get_raw_data();
 }
 

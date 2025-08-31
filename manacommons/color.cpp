@@ -15,12 +15,13 @@
     along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "portability.h"
 #include "manacommons/color.h"
 
-namespace utils
+namespace mana::utils
 {
 
-#ifdef BOOST_WINDOWS_API
+#if defined(WINDOWS)
 
 void set_color(Color c)
 {

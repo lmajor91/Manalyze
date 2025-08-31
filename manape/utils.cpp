@@ -135,7 +135,7 @@ bool read_string_at_offset(FILE* f, unsigned int offset, std::string& out, bool 
 
 // ----------------------------------------------------------------------------
 
-double DECLSPEC shannon_entropy(const std::vector<boost::uint8_t>& bytes)
+double DECLSPEC_MANAPE shannon_entropy(const std::vector<boost::uint8_t>& bytes)
 {
 	int frequency[256] = { 0 };
 	for (const auto& it : bytes)	{
