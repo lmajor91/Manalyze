@@ -15,12 +15,10 @@ You should have received a copy of the GNU General Public License
 along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "crypto/hash.h"
-#include <openssl/evp.h>
-#include <stdexcept>
+// the purpose of this file is to detect what systems this program is
+// being compiled on
 
-namespace crypto {
-
-
-
-} // namespace crypto
+// detects if we're compiling on Windows in any capacity
+#if defined(_WIN32) && !defined(__CYGWIN__) && !defined(__MSYS__)
+#define WINDOWS 1
+#endif

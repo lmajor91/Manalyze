@@ -15,5 +15,92 @@ You should have received a copy of the GNU General Public License
 along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// include our hash interface
-#include "crypto/hash.h"
+#ifndef __MANA_COMMONS_CRYPTO__
+#define __MANA_COMMONS_CRYPTO__ 1
+
+#include <string>
+#include <vector>
+
+#include <boost/assign.hpp>
+#include <boost/cstdint.hpp>
+#include <boost/make_shared.hpp>
+#include <boost/shared_array.hpp>
+#include <boost/system/api_config.hpp>
+
+#include "hash.h"
+#include "types.h"
+
+namespace crypto {
+
+/**
+ * @brief Gets a reference to a hashing algorithm by an enum.
+ * @returns An object for hashing.
+ */
+CRYPTOLIB_API Hash *get_algorithm(crypto::algorithm_t algo);
+
+/**
+ * @brief Converts a series of bytes into hexadecimal, all lowercase.
+ * @returns The hexadecimal string of bytes.
+ */
+CRYPTOLIB_API const std::string bytes_to_hex(const void *data, size_t len);
+
+/**
+ * @brief Gets the proper name of a hashing algorithm.
+ * @returns The name of the hashing algorithm this object is using.
+ */
+CRYPTOLIB_API const std::string algo_to_string(crypto::algorithm_t algo);
+
+
+/**
+ *	@brief	Computes the hash of a buffer.
+ *
+ *	@param	Digest& digest The digest to use.
+ *	@param	const std::vector<boost::uint8_t>& bytes The buffer to hash.
+ *
+ *	@return	A shared string containing the hash value. May be empty if an error occurred.
+ */
+CRYPTOLIB_API pString hash_bytes(Hash &digest, const std::vector<boost::uint8_t> &bytes);
+
+/**
+ *	@brief	Computes the hash of a file.
+ *
+ *	@param	Digest& digest The digest to use.
+ *	@param	const std::string& filename The path to the file to hash.
+ *
+ *	@return	A string containing the hash value. May be empty if an error occurred.
+ */
+CRYPTOLIB_API pString hash_file(Hash &digest, const std::string &filename);
+
+/**
+ *	@brief	Computes the hashes of a file.
+ *
+ *	This function is used to calculate multiple hashes of the same file in a single pass.
+ *
+ *	@param	const std::vector<pDigest>& digests A list of digests to use.
+ *			hash::ALL_DIGESTS is a suitable pre-initialized vector given for convenience.
+ *
+ *	@param	const std::string& filename The path to the file to hash.
+ *
+ *	@return	A shared vector containing all the computed hashes, in the same order as the
+ *input digests. If an error occurs for any digest, the return value's size is set to 0.
+ */
+CRYPTOLIB_API const_shared_strings hash_file(const std::vector<pHash> &digests,
+                                             const std::string &filename);
+
+/**
+ *	@brief	Computes the hashes of a buffer.
+ *
+ *	@param	const std::vector<pDigest>& digests A list of digests to use.
+ *			hash::ALL_DIGESTS is a suitable pre-initialized vector given for convenience.
+ *
+ *	@param	const std::vector<boost::uint8_t>& bytes The buffer to hash.
+ *
+ *	@return	A shared vector containing all the computed hashes, in the same order as the
+ *input digests. If an error occurs for any digest, the return value's size is set to 0.
+ */
+CRYPTOLIB_API const_shared_strings hash_bytes(const std::vector<pHash> &digests,
+                                              const std::vector<boost::uint8_t> &bytes);
+
+} // namespace crypto
+
+#endif // __MANA_COMMONS_CRYPTO__

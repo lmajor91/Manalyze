@@ -15,37 +15,41 @@ You should have received a copy of the GNU General Public License
 along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#pragma once
-#include <string>
-#include <vector>
-
-#include <boost/assign.hpp>
-#include <boost/cstdint.hpp>
-#include <boost/make_shared.hpp>
-#include <boost/shared_array.hpp>
-#include <boost/system/api_config.hpp>
-
-#include "hash-library/hash.h"
-#include "hash-library/keccak.h"
-#include "hash-library/md5.h"
-#include "hash-library/sha1.h"
-#include "hash-library/sha256.h"
-#include "hash-library/sha3.h"
-#include "hash-library/sha512.h"
-
-#if defined BOOST_WINDOWS_API && !defined CRYPTOLIB_API
-#ifdef CRYPTOLIB_EXPORT
-#define CRYPTOLIB_API __declspec(dllexport)
-#else
-#define CRYPTOLIB_API __declspec(dllimport)
-#endif
-#elif !defined BOOST_WINDOWS_API && !defined CRYPTOLIB_API
-#define CRYPTOLIB_API
-#endif
+#include "crypto/crypto.h"
+#include "portability.h"
 
 namespace crypto {
-typedef boost::shared_ptr<std::string> pString;
-typedef boost::shared_ptr<std::vector<std::string>> shared_strings;
-typedef boost::shared_ptr<const std::vector<std::string>> const_shared_strings;
+
+CRYPTOLIB_API Hash *get_algorithm(algorithm_t algo) {
+    switch (algo) {
+    case crypto::algorithm_t::MD5:
+        return new Hash(algorithm_t::MD5);
+    case crypto::algorithm_t::SHA1:
+        return new Hash(algorithm_t::SHA1);
+
+    // base case in case there's bad input
+    case crypto::algorithm_t::NONE:
+    default:
+        return nullptr;
+    }
+}
+
+CRYPTOLIB_API const std::string get_string_name(crypto::algorithm_t algo) {
+    switch (algo) {
+    case crypto::algorithm_t::MD5:
+        return std::string("md5");
+    case crypto::algorithm_t::SHA1:
+        return std::string("sha1");
+
+    // base case in case there's bad input
+    case crypto::algorithm_t::NONE:
+    default:
+        return std::string("none");
+    }
+}
+
+CRYPTOLIB_API const std::string bytes_to_hex(const void *data, size_t len) {
+    return std::string("bytes_to_hex is not implemented yet");
+}
 
 }; // namespace crypto
