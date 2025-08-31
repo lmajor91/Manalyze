@@ -25,7 +25,7 @@
 # define PRINT_ERROR std::cerr << "[!] Error: "
 # define PRINT_WARNING std::cerr << "[*] Warning: "
 
-# ifdef _DEBUG
+# ifdef DEBUG
 #  define DEBUG_INFO " (" << __FILE__ << ":" << std::dec << std::dec << __LINE__ << ")"
 #  define DEBUG_INFO_PE " (" << __FILE__ << ":" << std::dec << __LINE__ << ", " << *pe.get_path() << ")"
 #  define DEBUG_INFO_INSIDEPE " (" << __FILE__ << ":" << std::dec << __LINE__ << ", " << *get_path() << ")"

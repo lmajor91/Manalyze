@@ -803,7 +803,7 @@ pString translate_to_flag(unsigned int value, const flag_dict& dict)
             return boost::make_shared<std::string>(it.first);
         }
     }
-    #ifdef _DEBUG
+    #ifdef DEBUG
         std::stringstream ss;
         ss << "UNKNOWN (0x" << std::hex << value << ")";
         return boost::make_shared<std::string>(ss.str());
