@@ -17,17 +17,18 @@ along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
-#include <string>
-#include <boost/static_assert.hpp>
-#include <boost/spirit/include/karma.hpp>
-#include <boost/type_traits/is_base_of.hpp>
-#include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
+#include <boost/shared_ptr.hpp>
+#include <boost/spirit/include/karma.hpp>
+#include <boost/static_assert.hpp>
+#include <boost/type_traits/is_base_of.hpp>
+#include <string>
 
+#include "types.h"
+#include "manacommons/export.h"
 #include "manacommons/color.h"
 
-namespace io
-{
+namespace io {
 
 // ----------------------------------------------------------------------------
 // Grammars used to escape stings
@@ -35,26 +36,22 @@ namespace io
 
 namespace karma = boost::spirit::karma;
 typedef std::back_insert_iterator<std::string> sink_type;
-typedef boost::shared_ptr<std::string> pString;
 
 /**
-*	@brief	This grammar is used to escape strings printed to the console.
-*
-*	Printable characters are returned as-is, while the others are displayed using the C
-*	notation.
-*/
+ *	@brief	This grammar is used to escape strings printed to the console.
+ *
+ *	Printable characters are returned as-is, while the others are displayed using the C
+ *	notation.
+ */
 template <typename OutputIterator>
-struct escaped_string_raw
-	: karma::grammar<OutputIterator, std::string()>
-{
-	escaped_string_raw()
-		: escaped_string_raw::base_type(esc_str)
-	{
-		esc_str = *(boost::spirit::karma::iso8859_1::print | "\\x" << karma::right_align(2, 0)[karma::hex]);
-	}
+struct escaped_string_raw : karma::grammar<OutputIterator, std::string()> {
+    escaped_string_raw() : escaped_string_raw::base_type(esc_str) {
+        esc_str = *(boost::spirit::karma::iso8859_1::print |
+                    "\\x" << karma::right_align(2, 0)[karma::hex]);
+    }
 
-	karma::rule<OutputIterator, std::string()> esc_str;
-	karma::symbols<char, char const*> esc_char;
+    karma::rule<OutputIterator, std::string()> esc_str;
+    karma::symbols<char, char const *> esc_char;
 };
 
 // ----------------------------------------------------------------------------
@@ -69,26 +66,22 @@ struct escaped_string_raw
  *
  *	WARNING: Single quotes are NOT escaped.
  */
-// Source: http://svn.boost.org/svn/boost/trunk/libs/spirit/example/karma/escaped_string.cpp
+// Source:
+// http://svn.boost.org/svn/boost/trunk/libs/spirit/example/karma/escaped_string.cpp
 template <typename OutputIterator>
-struct escaped_string_json
-	: karma::grammar<OutputIterator, std::string()>
-{
-	escaped_string_json()
-		: escaped_string_json::base_type(esc_str)
-	{
-		// We allow "'" because it will be used in messages (i.e. [... don't ...]).
-		// We don't care if those are not escaped because they will be printed between double quotes
-		// in JSON strings.
-		esc_char.add('\a', "\\a")('\b', "\\b")('\f', "\\f")('\n', "\\n")
-			('\r', "\\r")('\t', "\\t")('\v', "\\v")('\\', "\\\\")
-			('\"', "\\\"");
+struct escaped_string_json : karma::grammar<OutputIterator, std::string()> {
+    escaped_string_json() : escaped_string_json::base_type(esc_str) {
+        // We allow "'" because it will be used in messages (i.e. [... don't ...]).
+        // We don't care if those are not escaped because they will be printed between
+        // double quotes in JSON strings.
+        esc_char.add('\a', "\\a")('\b', "\\b")('\f', "\\f")('\n', "\\n")('\r', "\\r")(
+            '\t', "\\t")('\v', "\\v")('\\', "\\\\")('\"', "\\\"");
 
-		esc_str = *(esc_char | boost::spirit::karma::char_);
-	}
+        esc_str = *(esc_char | boost::spirit::karma::char_);
+    }
 
-	karma::rule<OutputIterator, std::string()> esc_str;
-	karma::symbols<char, char const*> esc_char;
+    karma::rule<OutputIterator, std::string()> esc_str;
+    karma::symbols<char, char const *> esc_char;
 };
 
 // ----------------------------------------------------------------------------
@@ -109,24 +102,21 @@ class OutputFormatter;
  *
  *	@return	A pointer to the escaped string, or a null pointer if an error occurred.
  */
-template<typename Grammar>
-pString _do_escape(const std::string& s)
-{
-	BOOST_STATIC_ASSERT(boost::is_base_of<karma::grammar<sink_type, std::string()>, Grammar>::value);
-	typedef std::back_insert_iterator<std::string> sink_type;
+template <typename Grammar> pString _do_escape(const std::string &s) {
+    BOOST_STATIC_ASSERT(
+        boost::is_base_of<karma::grammar<sink_type, std::string()>, Grammar>::value);
+    typedef std::back_insert_iterator<std::string> sink_type;
 
-	std::string generated;
-	sink_type sink(generated);
+    std::string generated;
+    sink_type sink(generated);
 
-	Grammar g;
-	if (!karma::generate(sink, g, s))
-	{
-		PRINT_WARNING << "Could not escape \"" << s << "!" << std::endl;
-		return nullptr;
-	}
-	else {
-		return boost::make_shared<std::string>(generated);
-	}
+    Grammar g;
+    if (!karma::generate(sink, g, s)) {
+        PRINT_WARNING << "Could not escape \"" << s << "!" << std::endl;
+        return nullptr;
+    } else {
+        return boost::make_shared<std::string>(generated);
+    }
 }
 
 // ----------------------------------------------------------------------------
@@ -142,11 +132,9 @@ pString _do_escape(const std::string& s)
  *
  *	@returns The escaped string, or a null pointer if an error was encountered.
  */
-template<typename T>
-pString escape(const std::string& s)
-{
-	BOOST_STATIC_ASSERT(boost::is_base_of<OutputFormatter, T>::value);
-	return _do_escape<typename T::escape_grammar>(s);
+template <typename T> pString escape(const std::string &s) {
+    BOOST_STATIC_ASSERT(boost::is_base_of<OutputFormatter, T>::value);
+    return _do_escape<typename T::escape_grammar>(s);
 }
 
 // ----------------------------------------------------------------------------
@@ -161,6 +149,6 @@ pString escape(const std::string& s)
  *
  *	@returns The escaped string, or a null pointer if an error was encountered.
  */
-DECLSPEC_MANACOMMONS pString escape(const std::string& s);
+DECLSPEC_MANACOMMONS pString escape(const std::string &s);
 
-}
+} // namespace io

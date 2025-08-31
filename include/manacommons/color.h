@@ -15,30 +15,25 @@
     along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#pragma once
-
+#include <boost/system/api_config.hpp>
 #include <iostream>
 #include <string>
-#include <boost/system/api_config.hpp>
-#ifdef BOOST_WINDOWS_API
-	#include "windows.h"
+
+#include "manacommons/export.h"
+#include "portability.h"
+#include "types.h"
+
+#if defined(WINDOWS)
+#include "windows.h"
 #else
-	#include <unistd.h>
-	#include <stdio.h>
+#include <stdio.h>
+#include <unistd.h>
 #endif
 
-#if defined BOOST_WINDOWS_API && !defined DECLSPEC_MANACOMMONS
-	#ifdef MANACOMMONS_EXPORT
-		#define DECLSPEC_MANACOMMONS    __declspec(dllexport)
-	#else
-		#define DECLSPEC_MANACOMMONS    __declspec(dllimport)
-	#endif
-#elif !defined BOOST_WINDOWS_API && !defined DECLSPEC_MANACOMMONS
-	#define DECLSPEC_MANACOMMONS
-#endif
+#ifndef __MANACOMMONS_COLOR__
+#define __MANACOMMONS_COLOR__ 1
 
-namespace utils
-{
+namespace utils {
 
 enum Color { RED, GREEN, YELLOW, RESET };
 
@@ -55,22 +50,22 @@ void set_color(Color c);
  *	@param	const std::string& text The text to write.
  *	@param	Color c The color to write the text in.
  *	@param	The stream into which the text should be written.
- *	@param	const std::string& prefix An optional prefix string, which will be displayed in
- *			the default color.
- *	@param	const std::string& suffix An optional suffix string, which will be displayed in
- *			the default color.
+ *	@param	const std::string& prefix An optional prefix string, which will be displayed
+ *in the default color.
+ *	@param	const std::string& suffix An optional suffix string, which will be displayed
+ *in the default color.
  *
  *	@return	A reference to sink, so the operator "<<" can be chained.
  */
-DECLSPEC_MANACOMMONS std::ostream& print_colored_text(const std::string& text,
-													  Color c,
-													  std::ostream& sink = std::cout,
-													  const std::string& prefix = "",
-													  const std::string& suffix = "");
+DECLSPEC_MANACOMMONS std::ostream &print_colored_text(const std::string &text, Color c,
+                                                      std::ostream &sink = std::cout,
+                                                      const std::string &prefix = "",
+                                                      const std::string &suffix = "");
 
-#define PRINT_ERROR utils::print_colored_text("!", utils::RED, std::cerr, "[", "] Error: ")
-#define PRINT_WARNING utils::print_colored_text("*", utils::YELLOW, std::cerr, "[", "] Warning: ")
-
+#define PRINT_ERROR                                                                      \
+    utils::print_colored_text("!", utils::RED, std::cerr, "[", "] Error: ")
+#define PRINT_WARNING                                                                    \
+    utils::print_colored_text("*", utils::YELLOW, std::cerr, "[", "] Warning: ")
 
 #define LOG_CAP 100
 
@@ -84,14 +79,18 @@ DECLSPEC_MANACOMMONS bool is_log_cap_reached();
 #define CAPPED_LOGGING_END }
 
 // TODO: Add these macros to all errors and warnings.
-#ifdef _DEBUG
-	#define DEBUG_INFO " (" << __FILE__ << ":" << std::dec << __LINE__ << ")"
-	#define DEBUG_INFO_PE " (" << __FILE__ << ":" << std::dec << __LINE__ << ", " << *pe.get_path() << ")"
-	#define DEBUG_INFO_INSIDEPE " (" << __FILE__ << ":" << std::dec << __LINE__ << ", " << *get_path() << ")"
+#ifdef DEBUG
+#define DEBUG_INFO " (" << __FILE__ << ":" << std::dec << __LINE__ << ")"
+#define DEBUG_INFO_PE                                                                    \
+    " (" << __FILE__ << ":" << std::dec << __LINE__ << ", " << *pe.get_path() << ")"
+#define DEBUG_INFO_INSIDEPE                                                              \
+    " (" << __FILE__ << ":" << std::dec << __LINE__ << ", " << *get_path() << ")"
 #else
-	#define DEBUG_INFO ""
-	#define DEBUG_INFO_PE ""
-	#define DEBUG_INFO_INSIDEPE ""
+#define DEBUG_INFO ""
+#define DEBUG_INFO_PE ""
+#define DEBUG_INFO_INSIDEPE ""
 #endif
 
-} //namespace utils
+} // namespace utils
+
+#endif // __MANACOMMONS_COLOR__

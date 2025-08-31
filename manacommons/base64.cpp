@@ -19,35 +19,31 @@
 
 namespace utils {
 
-pString b64encode(const std::vector<boost::uint8_t>& bytes)
-{	
-	if (bytes.size() == 0) {
-		return boost::make_shared<std::string>("");
-	}
+pString b64encode(const std::vector<boost::uint8_t> &bytes) {
+    if (bytes.size() == 0) {
+        return boost::make_shared<std::string>("");
+    }
 
-	unsigned int padding = bytes.size() % 3;
-	
-	// Insert line breaks every 64 characters
-	typedef	biter::insert_linebreaks<
-		// Convert binary values to base64 characters
-		biter::base64_from_binary<
-			// Retrieve 6 bit integers from a sequence of 8 bit bytes
-			biter::transform_width<const boost::uint8_t*, 6, 8> 
-		> 
-		,64
-	> 
-	base64_encode; // compose all the above operations in to a new iterator
+    unsigned int padding = bytes.size() % 3;
 
-	std::stringstream ss;
-	std::copy(base64_encode(&bytes[0]), 
-			  base64_encode(&bytes[0] + bytes.size()), 
-			  std::ostream_iterator<char>(ss));
+    // Insert line breaks every 64 characters
+    typedef biter::insert_linebreaks<
+        // Convert binary values to base64 characters
+        biter::base64_from_binary<
+            // Retrieve 6 bit integers from a sequence of 8 bit bytes
+            biter::transform_width<const boost::uint8_t *, 6, 8>>,
+        64>
+        base64_encode; // compose all the above operations in to a new iterator
 
-	if (padding != 0) {
-		ss << std::string(3 - padding, '=');
-	}
-			  
-	return boost::make_shared<std::string>(ss.str());
+    std::stringstream ss;
+    std::copy(base64_encode(&bytes[0]), base64_encode(&bytes[0] + bytes.size()),
+              std::ostream_iterator<char>(ss));
+
+    if (padding != 0) {
+        ss << std::string(3 - padding, '=');
+    }
+
+    return boost::make_shared<std::string>(ss.str());
 }
 
-} // !namespace utils
+} // namespace utils
