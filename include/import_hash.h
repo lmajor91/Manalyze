@@ -17,7 +17,6 @@
 
 #include <boost/filesystem.hpp>
 
-#include "hash-library/hashes.h"
 #include "manape/pe.h"
 
 namespace bfs = boost::filesystem;

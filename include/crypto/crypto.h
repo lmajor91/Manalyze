@@ -15,10 +15,5 @@ You should have received a copy of the GNU General Public License
 along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#pragma once
-
-namespace plugin {
-
-enum LEVEL { SAFE, NO_OPINION, SUSPICIOUS, MALICIOUS };
-
-}
+// include our hash interface
+#include "crypto/hash.h"
