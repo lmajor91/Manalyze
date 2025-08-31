@@ -24,9 +24,10 @@
 #include <boost/optional.hpp>
 
 #include "threat_level.h" // Contains the LEVEL enum.
+#include "manacommons/export.h"
 #include "manacommons/output_tree_node.h"
 
-namespace plugin
+namespace mana::plugin
 {
 
 
