@@ -15,110 +15,99 @@
     along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "portability.h"
 #include "manacommons/color.h"
+#include "portability.h"
 
-namespace mana::utils
-{
+namespace mana::io {
 
+void set_color(Color c) {
 #if defined(WINDOWS)
+    HANDLE h = ::GetStdHandle(STD_OUTPUT_HANDLE);
+    if (h == INVALID_HANDLE_VALUE) {
+        return;
+    }
 
-void set_color(Color c)
-{
-	HANDLE h = ::GetStdHandle(STD_OUTPUT_HANDLE);
-	if (h == INVALID_HANDLE_VALUE) {
-		return;
-	}
+    // Save console style on the first call. This is needed as cmd.exe and powershell.exe
+    // use different background and text colors.
+    CONSOLE_SCREEN_BUFFER_INFO info;
+    static WORD background = 0xFFFF;
+    static WORD foreground = FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN |
+                             FOREGROUND_BLUE; // Default to white.
+    if (background == 0xFFFF) {
+        if (!::GetConsoleScreenBufferInfo(h, &info)) {
+            background = 0; // Default to black.
+        } else {
+            background = info.wAttributes & (BACKGROUND_BLUE | BACKGROUND_GREEN |
+                                             BACKGROUND_INTENSITY | BACKGROUND_RED);
+            foreground = info.wAttributes & (FOREGROUND_INTENSITY | FOREGROUND_RED |
+                                             FOREGROUND_GREEN | FOREGROUND_BLUE);
+        }
+    }
 
-	// Save console style on the first call. This is needed as cmd.exe and powershell.exe use different background and text colors.
-	CONSOLE_SCREEN_BUFFER_INFO info;
-	static WORD background = 0xFFFF;
-	static WORD foreground = FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE; // Default to white.
-	if (background == 0xFFFF)
-	{
-		if (!::GetConsoleScreenBufferInfo(h, &info)) {
-			background = 0;  // Default to black.
-		}
-		else 
-		{
-			background = info.wAttributes & (BACKGROUND_BLUE | BACKGROUND_GREEN | BACKGROUND_INTENSITY | BACKGROUND_RED);
-			foreground = info.wAttributes & (FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
-		}
-	}
+    switch (c) {
+    case RED:
+        ::SetConsoleTextAttribute(h, FOREGROUND_INTENSITY | FOREGROUND_RED | background);
+        break;
+    case GREEN:
+        ::SetConsoleTextAttribute(h,
+                                  FOREGROUND_INTENSITY | FOREGROUND_GREEN | background);
+        break;
+    case YELLOW:
+        ::SetConsoleTextAttribute(h, FOREGROUND_INTENSITY | FOREGROUND_RED |
+                                         FOREGROUND_GREEN | background);
+        break;
+    case RESET:
+        ::SetConsoleTextAttribute(h, foreground | background);
+        break;
+    }
 
-	switch(c)
-	{
-	case RED:
-		::SetConsoleTextAttribute(h, FOREGROUND_INTENSITY | FOREGROUND_RED | background);
-		break;
-	case GREEN:
-		::SetConsoleTextAttribute(h, FOREGROUND_INTENSITY | FOREGROUND_GREEN | background);
-		break;
-	case YELLOW:
-		::SetConsoleTextAttribute(h, FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN | background);
-		break;
-	case RESET:
-		::SetConsoleTextAttribute(h, foreground | background);
-		break;
-	}
+    // The handle should not be closed, otherwise writing to stdout will become
+    // impossible.
 
-	// The handle should not be closed, otherwise writing to stdout will become impossible.
-}
-
-#else // Unix implementation
-
-#define ANSI_COLOR_RED     "\x1b[31m"
-#define ANSI_COLOR_GREEN   "\x1b[32m"
-#define ANSI_COLOR_YELLOW  "\x1b[33m"
-#define ANSI_COLOR_RESET   "\x1b[0m"
-
-void set_color(Color c)
-{
-	if (!isatty(fileno(stdout))) {
-		return;
-	}
-	switch (c)
-	{
-	case RED:
-		std::cout << ANSI_COLOR_RED;
-		break;
-	case YELLOW:
-		std::cout << ANSI_COLOR_YELLOW;
-		break;
-	case GREEN:
-		std::cout << ANSI_COLOR_GREEN;
-		break;
-	case RESET:
-		std::cout << ANSI_COLOR_RESET;
-		break;
-	}
-}
-
+// Unix implementation
+#else
+#define ANSI_COLOR_RED "\x1b[31m"
+#define ANSI_COLOR_GREEN "\x1b[32m"
+#define ANSI_COLOR_YELLOW "\x1b[33m"
+#define ANSI_COLOR_RESET "\x1b[0m"
+    if (!isatty(fileno(stdout))) {
+        return;
+    }
+    switch (c) {
+    case RED:
+        std::cout << ANSI_COLOR_RED;
+        break;
+    case YELLOW:
+        std::cout << ANSI_COLOR_YELLOW;
+        break;
+    case GREEN:
+        std::cout << ANSI_COLOR_GREEN;
+        break;
+    case RESET:
+        std::cout << ANSI_COLOR_RESET;
+        break;
+    }
 #endif
-
-std::ostream& print_colored_text(const std::string& text,
-								 Color c,
-								 std::ostream& sink,
-								 const std::string& prefix,
-								 const std::string& suffix)
-{
-	sink << prefix;
-	set_color(c);
-	sink << text;
-	set_color(RESET);
-	return sink << suffix;
 }
 
-bool is_log_cap_reached()
-{
-	static unsigned int log_count = 0;
-	if (++log_count < LOG_CAP) {
-		return false;
-	}
-	else if (log_count == LOG_CAP) {
-		PRINT_ERROR << "Logging cap reached. Further verbose warnings will be ignored." << std::endl;
-	}
-	return true;
+std::ostream &print_colored_text(const std::string &text, Color c, std::ostream &sink,
+                                 const std::string &prefix, const std::string &suffix) {
+    sink << prefix;
+    set_color(c);
+    sink << text;
+    set_color(RESET);
+    return sink << suffix;
 }
 
+bool is_log_cap_reached() {
+    static unsigned int log_count = 0;
+    if (++log_count < LOG_CAP) {
+        return false;
+    } else if (log_count == LOG_CAP) {
+        PRINT_ERROR << "Logging cap reached. Further verbose warnings will be ignored."
+                    << std::endl;
+    }
+    return true;
 }
+
+} // namespace mana::io

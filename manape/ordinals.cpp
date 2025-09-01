@@ -1,6 +1,6 @@
 #include "manape/ordinals.h"
 
-namespace nt {
+namespace mana::nt {
 
 // ----------------------------------------------------------------------------
 

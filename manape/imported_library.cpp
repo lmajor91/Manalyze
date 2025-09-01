@@ -17,7 +17,7 @@
 
 #include "manape/imported_library.h"
 
-namespace mana
+namespace mana::pe
 {
 
 ImportedLibrary::ImportedLibrary(const std::string& library_name, pimage_import_descriptor image_import_descriptor)
