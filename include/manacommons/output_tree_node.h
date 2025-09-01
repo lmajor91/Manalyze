@@ -298,7 +298,13 @@ class OutputTreeNode {
     DECLSPEC_MANACOMMONS pNode find_node(const std::string &name) const;
 #pragma endregion
 };
+
+#pragma region typedefs
 typedef OutputTreeNode::pNode pNode;
+typedef OutputTreeNode::nodes nodes;
+typedef OutputTreeNode::pNodes pNodes;
+typedef OutputTreeNode::shared_opt_nodes shared_opt_nodes;
+#pragma endregion
 
 /**
  *	@brief	For LIST nodes, returns the size of the biggest child's name.
@@ -311,6 +317,6 @@ typedef OutputTreeNode::pNode pNode;
  */
 DECLSPEC_MANACOMMONS size_t determine_max_width(pNode node);
 
-} // namespace io
+} // namespace mana::io
 
 #endif // __MANACOMMONS_OUTPUT_TREE_NODE__
