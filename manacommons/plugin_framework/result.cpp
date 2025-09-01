@@ -15,30 +15,28 @@ You should have received a copy of the GNU General Public License
 along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "plugin_framework/result.h"
+#include "manacommons/plugin_framework/result.h"
 
-namespace plugin {
+namespace mana::plugin {
 
 Result::Result(const std::string &plugin_name) {
-    _data = boost::make_shared<mana::io::OutputTreeNode>(
-        plugin_name, mana::io::OutputTreeNode::LIST);
-    _data->append(
-        boost::make_shared<mana::io::OutputTreeNode>("level", NO_OPINION));
+    _data = boost::make_shared<mana::io::OutputTreeNode>(plugin_name,
+                                                         mana::io::OutputTreeNode::LIST);
+    _data->append(boost::make_shared<mana::io::OutputTreeNode>("level", NO_OPINION));
     _data->append(boost::make_shared<mana::io::OutputTreeNode>(
         "plugin_output", mana::io::OutputTreeNode::LIST));
 }
 
 // ----------------------------------------------------------------------------
 
-void Result::set_level(LEVEL level) {
+void Result::set_level(mana::threat_level level) {
     mana::io::pNode opt_level = _data->find_node("level");
     if (!opt_level) // Should never happen.
     {
         PRINT_WARNING
             << "[Result] A result object has no level node. This should be investigated."
             << DEBUG_INFO << std::endl;
-        _data->append(
-            boost::make_shared<mana::io::OutputTreeNode>("level", level));
+        _data->append(boost::make_shared<mana::io::OutputTreeNode>("level", level));
     } else {
         opt_level->update_value(level);
     }
@@ -46,15 +44,14 @@ void Result::set_level(LEVEL level) {
 
 // ----------------------------------------------------------------------------
 
-void Result::raise_level(LEVEL level) {
+void Result::raise_level(mana::threat_level level) {
     mana::io::pNode opt_level = _data->find_node("level");
     if (!opt_level) // Should never happen.
     {
         PRINT_WARNING
             << "[Result] A result object has no level node. This should be investigated."
             << DEBUG_INFO << std::endl;
-        _data->append(
-            boost::make_shared<mana::io::OutputTreeNode>("level", level));
+        _data->append(boost::make_shared<mana::io::OutputTreeNode>("level", level));
     } else {
         if (level > opt_level->get_level()) {
             opt_level->update_value(level);
@@ -64,7 +61,7 @@ void Result::raise_level(LEVEL level) {
 
 // ----------------------------------------------------------------------------
 
-LEVEL Result::get_level() const {
+mana::threat_level Result::get_level() const {
     mana::io::pNode opt_level = _data->find_node("level");
     if (!opt_level) // Should never happen.
     {
@@ -164,10 +161,9 @@ std::string Result::_create_node_name() const {
 /**
  *	@brief	Template specialization for nodes.
  */
-template <>
-DECLSPEC_MANACOMMONS void Result::add_information(mana::io::pNode node) {
+template <> DECLSPEC_MANACOMMONS void Result::add_information(mana::io::pNode node) {
     mana::io::pNode output = get_information();
     output->append(node);
 }
 
-} // namespace plugin
+} // namespace mana::plugin

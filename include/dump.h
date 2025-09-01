@@ -17,38 +17,39 @@
 
 #pragma once
 
-#include <set>
-#include <vector>
-#include <string>
-#include <sstream>
-#include <boost/range/adaptor/indexed.hpp>
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/make_shared.hpp>
+#include <boost/range/adaptor/indexed.hpp>
+#include <set>
+#include <sstream>
+#include <string>
+#include <vector>
 
-#include "output_formatter.h"
 #include "manape/pe.h"
 #include "manape/utils.h"
-#include "yara/yara_wrapper.h"
+#include "output_formatter.h"
+// #include "yara/yara_wrapper.h"
 
 #include "manacommons/base64.h"
 
-namespace mana
-{
-void dump_dos_header(const pe::PE& pe, io::OutputFormatter& formatter);
-void dump_pe_header(const pe::PE& pe, io::OutputFormatter& formatter);
-void dump_image_optional_header(const pe::PE& pe, io::OutputFormatter& formatter);
-void dump_section_table(const pe::PE& pe, io::OutputFormatter& formatter, bool compute_hashes = false);
-void dump_imports(const pe::PE& pe, io::OutputFormatter& formatter);
-void dump_exports(const pe::PE& pe, io::OutputFormatter& formatter);
-void dump_resources(const pe::PE& pe, io::OutputFormatter& formatter, bool compute_hashes = false);
-void dump_version_info(const pe::PE& pe, io::OutputFormatter& formatter);
-void dump_debug_info(const pe::PE& pe, io::OutputFormatter& formatter);
-void dump_tls(const pe::PE& pe, io::OutputFormatter& formatter);
-void dump_config(const pe::PE&pe, io::OutputFormatter& formatter);
-void dump_summary(const pe::PE& pe, io::OutputFormatter& formatter);
-void dump_hashes(const pe::PE& pe, io::OutputFormatter& formatter);
-void dump_dldt(const pe::PE& pe, io::OutputFormatter& formatter);
-void dump_rich_header(const pe::PE& pe, io::OutputFormatter& formatter);
+namespace mana {
+void dump_dos_header(const pe::PE &pe, io::OutputFormatter &formatter);
+void dump_pe_header(const pe::PE &pe, io::OutputFormatter &formatter);
+void dump_image_optional_header(const pe::PE &pe, io::OutputFormatter &formatter);
+void dump_section_table(const pe::PE &pe, io::OutputFormatter &formatter,
+                        bool compute_hashes = false);
+void dump_imports(const pe::PE &pe, io::OutputFormatter &formatter);
+void dump_exports(const pe::PE &pe, io::OutputFormatter &formatter);
+void dump_resources(const pe::PE &pe, io::OutputFormatter &formatter,
+                    bool compute_hashes = false);
+void dump_version_info(const pe::PE &pe, io::OutputFormatter &formatter);
+void dump_debug_info(const pe::PE &pe, io::OutputFormatter &formatter);
+void dump_tls(const pe::PE &pe, io::OutputFormatter &formatter);
+void dump_config(const pe::PE &pe, io::OutputFormatter &formatter);
+void dump_summary(const pe::PE &pe, io::OutputFormatter &formatter);
+void dump_hashes(const pe::PE &pe, io::OutputFormatter &formatter);
+void dump_dldt(const pe::PE &pe, io::OutputFormatter &formatter);
+void dump_rich_header(const pe::PE &pe, io::OutputFormatter &formatter);
 
 /**
  * @brief   Detects the filetype of a given resource based on magic numbers contained
@@ -59,16 +60,16 @@ void dump_rich_header(const pe::PE& pe, io::OutputFormatter& formatter);
  *          cases, but so-called polyglot files can be of multiple file types at the
  *          same type.
  */
-yara::const_matches detect_filetype(pe::pResource resource);
+// yara::const_matches detect_filetype(pe::pResource resource);
 
 /**
  * @brief   Extracts resources from a PE file.
  *
  *	In the general case, the resource's raw bytes are written to a file, but some resource
  *	types can be handled more gracefully:
- *	* RT_GROUP_ICON (and the referenced RT_ICON resources, which cannot be extracted alone)
- *	  are saved as .ico files. (RT_GROUP_CURSORS are supported too, but don't seem to work
- *	  as well.)
+ *	* RT_GROUP_ICON (and the referenced RT_ICON resources, which cannot be extracted
+ *alone) are saved as .ico files. (RT_GROUP_CURSORS are supported too, but don't seem to
+ *work as well.)
  *	* RT_BITMAP as .bmp files. The bitmap header is reconstructed.
  *	* RT_MANIFEST as .xml files.
  *
@@ -78,22 +79,22 @@ yara::const_matches detect_filetype(pe::pResource resource);
  *
  * @return  Whether the extraction was successful.
  */
-bool extract_resources(const pe::PE& pe, const std::string& destination_folder);
+bool extract_resources(const pe::PE &pe, const std::string &destination_folder);
 
 /**
  *	@brief	Extracts the certificates used for the Authenticode signature of the PE.
  *
  *  @param  const pe::PE& pe The PE whose certificates we want extracted.
- *	@param	const std::string& destination_folder The folder into which the certificates should
- *			be placed.
- *	@param	const std::string& filename The name of the file which in which the certificate will
- *			be stored. If none is provided, the name [PE name].p7b will be used. 
+ *	@param	const std::string& destination_folder The folder into which the certificates
+ *should be placed.
+ *	@param	const std::string& filename The name of the file which in which the
+ *certificate will be stored. If none is provided, the name [PE name].p7b will be used.
  *			/!\ Existing files will be overwritten!
  *
  *	@return	Whether the extraction was successful or not.
  */
-bool extract_authenticode_certificates(const pe::PE& pe,
-                                       const std::string& destination_folder,
-                                       const std::string& filename = "");
+bool extract_authenticode_certificates(const pe::PE &pe,
+                                       const std::string &destination_folder,
+                                       const std::string &filename = "");
 
-} // !namespace mana
+} // namespace mana

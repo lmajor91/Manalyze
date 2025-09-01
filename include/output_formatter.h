@@ -35,7 +35,7 @@ along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 #include "manacommons/output_tree_node.h"
 #include "manacommons/plugin_framework/result.h" // Necessary to hold a threat level in a node.
 
-namespace io {
+namespace mana::io {
 
 // ----------------------------------------------------------------------------
 // Base class of all the formatters
@@ -222,4 +222,4 @@ class JsonFormatter : public OutputFormatter {
  */
 std::string uint64_to_version_number(boost::uint32_t msbytes, boost::uint32_t lsbytes);
 
-} // namespace io
+} // namespace mana::io
