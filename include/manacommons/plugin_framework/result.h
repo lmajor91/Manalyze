@@ -23,7 +23,7 @@ along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "manacommons/export.h"
 #include "manacommons/output_tree_node.h"
-#include "manacommons/plugin_framework/threat_level.h" // Contains the LEVEL enum.
+#include "manacommons/threat_level.h" // Contains the LEVEL enum.
 
 #ifndef __MANACOMMONS_PLUGIN_RESULT__
 #define __MANACOMMONS_PLUGIN_RESULT__ 1
@@ -42,7 +42,7 @@ class Result {
                           // IPlugin::make_result().
 
   public:
-    DECLSPEC_MANACOMMONS void set_level(LEVEL level);
+    DECLSPEC_MANACOMMONS void set_level(mana::threat_level level);
 
     /**
      *	@brief	This function is simply a setter which only sets the value if the new one
@@ -50,9 +50,9 @@ class Result {
      *
      *	@param	LEVEL level	The level to set.
      */
-    DECLSPEC_MANACOMMONS void raise_level(LEVEL level);
+    DECLSPEC_MANACOMMONS void raise_level(mana::threat_level level);
 
-    DECLSPEC_MANACOMMONS LEVEL get_level() const;
+    DECLSPEC_MANACOMMONS mana::threat_level get_level() const;
 
     DECLSPEC_MANACOMMONS void set_summary(const std::string &s);
 

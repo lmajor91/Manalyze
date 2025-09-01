@@ -15,13 +15,13 @@ You should have received a copy of the GNU General Public License
 along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef __MANACOMMONS_PLUGIN_THREAT_LEVEL__
-#define __MANACOMMONS_PLUGIN_THREAT_LEVEL__ 1
+#ifndef __MANACOMMONS_THREAT_LEVEL__
+#define __MANACOMMONS_THREAT_LEVEL__ 1
 
-namespace mana::plugin {
+namespace mana {
 
-enum LEVEL { SAFE, NO_OPINION, SUSPICIOUS, MALICIOUS };
+enum threat_level { SAFE, NO_OPINION, SUSPICIOUS, MALICIOUS };
 
 }
 
-#endif // __MANACOMMONS_PLUGIN_THREAT_LEVEL__
+#endif // __MANACOMMONS_THREAT_LEVEL__

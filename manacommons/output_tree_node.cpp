@@ -151,18 +151,18 @@ pString OutputTreeNode::to_string() const {
 
 // ----------------------------------------------------------------------------
 
-plugin::LEVEL OutputTreeNode::get_level() const {
+mana::threat_level OutputTreeNode::get_level() const {
     if (_type != THREAT_LEVEL) {
         PRINT_WARNING
             << "[OutputTreeNode] Tried to get a level, but is not a THREAT_LEVEL node!"
             << DEBUG_INFO << std::endl;
-        return plugin::NO_OPINION;
+        return mana::threat_level::NO_OPINION;
     }
 
     if (!_level_data || !*_level_data) {
         PRINT_WARNING << "[OutputTreeNode] A THREAT_LEVEL node's data is empty!"
                       << DEBUG_INFO << std::endl;
-        return plugin::NO_OPINION;
+        return mana::threat_level::NO_OPINION;
     }
 
     return **_level_data;
@@ -286,7 +286,7 @@ void OutputTreeNode::update_value(const std::string &s) {
 
 // ----------------------------------------------------------------------------
 
-void OutputTreeNode::update_value(plugin::LEVEL level) {
+void OutputTreeNode::update_value(threat_level level) {
     if (_type != THREAT_LEVEL) {
         PRINT_WARNING
             << "[OutputTreeNode] Tried to set a LEVEL in a non-THREAT_LEVEL node!"
@@ -298,7 +298,7 @@ void OutputTreeNode::update_value(plugin::LEVEL level) {
         return;
     }
 
-    *_level_data = boost::optional<plugin::LEVEL>(level);
+    *_level_data = boost::optional<mana::threat_level>(level);
 }
 
 // ----------------------------------------------------------------------------

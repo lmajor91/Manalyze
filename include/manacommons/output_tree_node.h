@@ -28,7 +28,7 @@ along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "manacommons/color.h"
 #include "manacommons/export.h"
-#include "plugin_framework/threat_level.h"
+#include "manacommons/threat_level.h"
 #include "types.h"
 
 namespace mana::io {
@@ -40,10 +40,8 @@ typedef boost::shared_ptr<boost::optional<float>> shared_opt_float;
 typedef boost::shared_ptr<boost::optional<double>> shared_opt_double;
 typedef boost::shared_ptr<boost::optional<std::string>> shared_opt_string;
 typedef boost::shared_ptr<boost::optional<strings>> shared_opt_strings;
-typedef boost::shared_ptr<boost::optional<plugin::LEVEL>> shared_opt_level;
+typedef boost::shared_ptr<boost::optional<threat_level>> shared_opt_level;
 
-#pragma region OutputTreeNode
-#pragma endregion
 /**
  *	@brief	A tree representing the data to output.
  */
@@ -153,10 +151,10 @@ class OutputTreeNode {
             strings(strs.begin(), strs.end()));
     }
 
-    DECLSPEC_MANACOMMONS OutputTreeNode(const std::string &name, plugin::LEVEL level,
+    DECLSPEC_MANACOMMONS OutputTreeNode(const std::string &name, threat_level level,
                                         display_modifier mod = NONE)
         : _name(new std::string(name)), _type(THREAT_LEVEL),
-          _level_data(new boost::optional<plugin::LEVEL>(level)), _modifier(mod) {}
+          _level_data(new boost::optional<mana::threat_level>(level)), _modifier(mod) {}
 
     // ----------------------------------------------------------------------------
 
@@ -205,7 +203,7 @@ class OutputTreeNode {
 
     // ----------------------------------------------------------------------------
 
-    DECLSPEC_MANACOMMONS plugin::LEVEL get_level() const;
+    DECLSPEC_MANACOMMONS threat_level get_level() const;
 
     // ----------------------------------------------------------------------------
 
@@ -247,7 +245,7 @@ class OutputTreeNode {
 
     // ----------------------------------------------------------------------------
 
-    DECLSPEC_MANACOMMONS void update_value(plugin::LEVEL level);
+    DECLSPEC_MANACOMMONS void update_value(mana::threat_level level);
 
     // ----------------------------------------------------------------------------
 
