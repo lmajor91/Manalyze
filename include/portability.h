@@ -22,3 +22,8 @@ along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 #if defined(_WIN32) && !defined(__CYGWIN__) && !defined(__MSYS__)
 #define WINDOWS 1
 #endif
+
+// determines if we're building on an Apple system
+#if defined(__APPLE__)
+#define APPLE 1
+#endif
